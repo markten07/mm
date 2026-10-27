@@ -1,0 +1,6 @@
+.ux-host{display:flex;align-items:center;gap:18px;width:min(100%,720px);margin:16px auto;padding:18px 22px;border:1px solid #8f7953;border-radius:18px;background:linear-gradient(120deg,#202d3b,#151e29);color:#ecedf0;text-align:left;box-sizing:border-box}.ux-host svg{width:72px;height:90px;flex-shrink:0}.ux-host small{color:#ddbd7b;font-size:12px;letter-spacing:.12em}.ux-host p{font-size:17px;line-height:1.6;margin:6px 0}.ux-host span{display:block;font-size:14px;color:#bbc9d7;line-height:1.6}@media(max-width:500px){.ux-host{padding:14px;gap:12px}.ux-host svg{width:52px;height:70px}.ux-host p{font-size:15px}}
+
+/* Always available, including resumed games and story playback. */
+.hdr .new-game-btn{flex-shrink:0;white-space:nowrap;border:1px solid #c5a66a;border-radius:8px;background:#342c20;color:#f6dfad;padding:8px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.hdr .new-game-btn:hover{background:#4a3d29}.hdr .new-game-btn:focus-visible{outline:3px solid #71bcff;outline-offset:3px}.hdr .new-game-btn:disabled{opacity:.6;cursor:wait}
+@media(max-width:640px){.hdr{flex-wrap:wrap;gap:8px}.hdr .bd{flex-basis:100%}.hdr .st{display:none}.hdr .new-game-btn{margin-left:auto}}

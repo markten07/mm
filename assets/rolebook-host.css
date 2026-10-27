@@ -1,0 +1,23 @@
+:host{color-scheme:dark;--bg:#11151a;--surface:#1c232b;--surface-soft:#171d24;--text:#f1f3f5;--muted:#a6afb9;--faint:#77828e;--line:#2c343e;--accent:#a4d5e3;--accent-ink:#102a34;--nav:72px;--action:88px;--safe:env(safe-area-inset-bottom,0px);font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:16px;line-height:1.65;letter-spacing:-.025em}
+:host{display:block;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif}
+:host([hidden]){display:none!important}
+.rb-viewport{height:100dvh;overflow:auto;overscroll-behavior:contain;background:#090d12;scrollbar-width:thin}
+.play-app{min-height:100dvh}.rb-place{display:block;color:var(--accent);font-size:12px;margin-bottom:5px}
+.rb-alibi{border-left:2px solid #53616b;padding-left:12px;margin-top:14px;color:var(--muted)}
+.rb-alibi>span{font-size:11px}.rb-alibi>p{font-size:14px;margin-top:5px}
+.identity-gate>.object-art{width:40px;height:40px;color:var(--accent);margin-bottom:16px}
+.bottom-nav button{font-size:14px}.icon-button{width:68px}
+.more-context ul{padding-left:20px}.more-context li{margin-bottom:10px}
+.rb-meeting-cards{margin-top:24px}
+.rb-meeting-card{border:1px solid var(--line);border-radius:14px;background:var(--surface-soft);padding:18px}
+.rb-meeting-heading{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.rb-meeting-heading h2{font-size:14px;color:var(--accent)}
+.rb-meeting-card>p{font-size:17px;line-height:1.8;word-break:keep-all}
+.rb-meeting-heading .record-art{flex-basis:48px;height:48px}
+.rb-meeting-heading .object-art{width:38px;height:38px}
+.rb-stage-task{border:1px solid #3e5e6c;border-radius:14px;background:#1a2b34;padding:18px;margin:0 0 24px}
+.rb-stage-task[hidden]{display:none}
+.rb-stage-task>span{font-size:12px;color:var(--accent)}
+.rb-stage-task h2{font-size:21px;margin:5px 0 10px}
+.rb-stage-task p{font-size:15px;color:#c5d1da;line-height:1.8;word-break:keep-all}
+.rb-stage-task .secondary-button{margin-top:16px;font-size:15px;border-color:#5a8597}
