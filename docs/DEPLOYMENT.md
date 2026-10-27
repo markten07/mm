@@ -8,10 +8,17 @@
 - `_site/`는 실제 배포 파일이며 HTML 6개와 assets를 포함한다. 작업 문서와 검사 코드는 사이트 배포 묶음에서 제외한다.
 - QR은 현재 배포 주소와 현재 방 코드를 사용한다. 예전 사이트 주소에 고정되지 않는다.
 
-## 공개 링크를 만들기 위한 남은 선택
+## 공개 배포 완료
 
-1. GitHub에서 Private Pages를 지원하는 요금제를 사용한 뒤 Pages를 활성화하거나,
-2. 저장소는 Private로 유지하고 별도 호스팅 서비스로 게임 파일을 전송해 공개 배포한다.
+- 공개 게임: https://markten-mm.dnduf8507.chatgpt.site
+- 호스팅: Sites, 공개 접속 허용. GitHub 저장소는 Private 유지.
+- 2026-10-27 사용자가 Sites 파일 전송 및 공개 배포를 승인한 뒤 업로드했다.
+- Sites 프로젝트: appgprj_6ae01aa9cd788191b0b6608cd31ab797
+- 배포 소스 커밋(Sites 별도 저장소): c9d1668056fead25cf29701ba6fe51f579361987
+- 저장 버전: appgprj_6ae01aa9cd788191b0b6608cd31ab797~appgver_ce3cf98d40788191a565fcf2f8aee174 (1)
+- 배포: appgdep_6ae01ca906d48191a2b205846c6b4af4
+- 네이티브 배포 결과: succeeded, 2026-10-27T03:38:37.176439+00:00
+- GitHub Actions는 검사/파일 생성이며, Sites 자동 연속 배포는 설정하지 않았다.
 
-Sites 호스팅은 비공개 초안 등록만 되었으며, 게임 소스 전송 단계가 자동 승인 검토에서 차단되었다. 다른 서비스에 비공개 게임 소스를 전송할 명시적 사용자 승인이 필요하다는 이유다. 사이트 업로드·저장 버전·공개 배포는 실행되지 않았다. 재시도 시에는 `.hosting/mm-site/.openai/hosting.json`의 기존 프로젝트 ID를 재사용해야 한다.
+이전 자동 승인 검토 차단은 사용자 명시 승인 후 해소되었다. 재배포 시 `.hosting/mm-site/.openai/hosting.json`의 기존 프로젝트 ID를 재사용한다.
 호스팅 준비 폴더 `.hosting/`는 Git에 포함하지 않는다. 인증 토큰은 파일이나 저장소에 저장하지 않는다.
