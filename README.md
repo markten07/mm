@@ -1,11 +1,11 @@
 # 저택 살인사건 — 머더미스터리
 
 진행자 화면 한 개와 참가자 네 명의 휴대폰으로 진행하는 정적 웹 게임입니다.
-GitHub 저장소: https://github.com/markten07/mm (Private)
+GitHub 저장소: https://github.com/markten07/mm (Public)
 
-공개 게임: https://markten-mm.dnduf8507.chatgpt.site
+공개 게임: https://markten07.github.io/mm/
 
-Sites에 첫 버전을 공개 배포했습니다. 진행자는 위 주소로 접속하고, 참가자는 화면의 QR로 입장합니다. GitHub Actions는 검사와 파일 생성을 수행하며 Sites 배포는 별도로 진행합니다.
+진행자는 위 주소로 접속하고, 참가자는 화면의 QR로 입장합니다. GitHub Actions에서 검사 후 GitHub Pages로 자동 배포합니다.
 
 ## 화면
 
