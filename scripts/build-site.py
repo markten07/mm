@@ -5,7 +5,7 @@ import shutil
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / '_site'
-PAGES = ['index.html', '1.html', '2.html', '3.html', '4.html', 'character-book-sample.html']
+PAGES = ['index.html', '1.html', '2.html', '3.html', '4.html', 'character-book-sample.html', 'character-memory-sample.html']
 if OUT.exists():
     shutil.rmtree(OUT)
 OUT.mkdir()

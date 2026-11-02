@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101211">
+  <meta name="color-scheme" content="dark">
+  <title>한소설의 기억 · 캐릭터 몰입 시안</title>
+  <link rel="preload" as="image" href="assets/portrait-han.png">
+  <link rel="stylesheet" href="assets/character-memory.css">
+  <script defer src="assets/character-memory.js"></script>
+</head>
+<body>
+  <div class="memory-app">
+    <header class="topbar">
+      <a class="wordmark" href="character-book-sample.html" aria-label="기존 캐릭터북 시안으로">저택<span>캐릭터 기억 시안</span></a>
+      <div class="tools">
+        <button type="button" id="motion-toggle" aria-pressed="false" aria-label="움직임 줄이기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5v14M15 5v14"/></svg><span>움직임</span></button>
+        <button type="button" id="cover-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M9 5.4C16 3.4 21 12 21 12a21 21 0 0 1-3 3.8M6 6.2C4.1 8.1 3 12 3 12s4 7 9 7c1.7 0 3.2-.5 4.5-1.3M10 10a3 3 0 0 0 4 4"/></svg><span>덮기</span></button>
+      </div>
+    </header>
+    <main id="memory-main" tabindex="-1"></main>
+    <footer id="memory-footer" class="memory-footer"></footer>
+  </div>
+  <dialog id="privacy-cover" aria-labelledby="cover-title">
+    <div class="cover-content"><span class="eyebrow">잠시, 현실로</span><div class="covered-orb" aria-hidden="true"></div><h2 id="cover-title">기억을 덮어두었습니다.</h2><p>주변에 화면이 보이지 않을 때<br>읽던 장면으로 돌아오세요.</p><button type="button" class="primary" id="resume-button">이어서 보기 <span aria-hidden="true">↗</span></button><small>비밀 장면은 다시 가려져 있어요.</small></div>
+  </dialog>
+  <noscript><p class="noscript">기억 시안을 보려면 JavaScript를 켜주세요. <a href="2.html">한소설 게임 화면으로</a></p></noscript>
+</body>
+</html>

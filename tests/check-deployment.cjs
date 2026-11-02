@@ -1,5 +1,5 @@
 const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert/strict');
-const pages=['index.html','1.html','2.html','3.html','4.html','character-book-sample.html'];
+const pages=['index.html','1.html','2.html','3.html','4.html','character-book-sample.html','character-memory-sample.html'];
 for(const name of pages){
  const html=fs.readFileSync(name,'utf8');
  for(const m of html.matchAll(/\b(?:src|href)=["']([^"'<>]+)["']/g)){
