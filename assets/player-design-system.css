@@ -50,6 +50,8 @@ body.player-game{background:var(--ui-bg);color:var(--ui-text);font-family:var(--
 .player-game .hdr .me,.player-game .hdr .bk{display:none}
 .player-game .hdr .tt{flex:0 1 auto;font-size:12px;line-height:1.5;font-weight:500;letter-spacing:0;color:var(--ui-muted)}
 .player-game #tabs{position:fixed;top:auto;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:1100px;z-index:35;backdrop-filter:none}
+.player-game #tabs button{color:var(--ui-faint);font-weight:500;box-shadow:none}
+.player-game #tabs button[aria-current=page]{color:var(--ui-accent);font-weight:600}
 .player-game #dt,.player-game .dock{display:none!important}
 .player-game #main{width:100%;max-width:720px;margin:0 auto;padding:24px 24px calc(var(--ui-nav) + var(--ui-safe) + 28px)}
 .player-game .ux-board-heading{margin:0 0 16px;align-items:center}
