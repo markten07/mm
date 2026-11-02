@@ -16,13 +16,13 @@
       detailTitle:'계약이 왜 두려웠나요?', detail:'과거의 잘못이 드러나면 이혼하고, 한소설에게 책임이 있으면 금전적 피해보상까지 해야 한다는 결혼 계약이 있었습니다. 계약서는 잠긴 서랍에 있습니다.'
     },
     {
-      label:'나의 결심', place:'사건 전 · 돈과 선택', image:'assets/prologue-novel.png', art:'study', private:true,
+      label:'나의 결심', place:'사건 전 · 돈과 선택', image:'assets/prologue-novel.png', art:'study',
       title:'돈이 필요했다.<br>나는 선을 넘기로 했다.',
       lines:['투자마저 실패했다. 나는 아내의 유산과 사망보험을 알아봤다.', '결국 아내를 죽이려 살충제를 내 이름으로 샀다.'],
       detailTitle:'왜 이런 선택을 했나요?', detail:'과거가 드러나면 이혼과 배상을 감당해야 한다는 두려움에 투자 실패까지 겹쳤습니다. 아내를 죽이려 한 것은 당신의 선택입니다. 유산과 보험을 실제로 받았다는 뜻은 아닙니다.'
     },
     {
-      label:'나의 행동', place:'19:30 · 식당에서 주방으로', image:'assets/memory-han-kitchen.png', art:'kitchen', private:true,
+      label:'나의 행동', place:'19:30 · 식당에서 주방으로', image:'assets/memory-han-kitchen.png', art:'kitchen',
       title:'그 사이,<br>나는 주방으로 갔다.',
       lines:['백비서에게 식당 테이블을 확인해달라고 했다.', '그가 확인하는 동안, 아내의 수프에 살충제를 넣었다.'],
       detailTitle:'백비서는 어디까지 봤나요?', detail:'19:31경 백비서가 당신이 주방에서 나오는 모습을 봤습니다. 주방 안에서 살충제를 넣는 장면을 직접 본 것은 아닙니다. 테이블의 어떤 물건을 확인시켰는지까지는 설정에 없습니다.',
@@ -47,14 +47,14 @@
   const lock = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg>';
   const arrow = '<span aria-hidden="true">↗</span>';
   function intro() {
-    return `<section class="intro-screen"><div class="intro-art"><img src="assets/portrait-han.png" alt="한소설의 정면 초상" fetchpriority="high"><div class="portrait-vignette"></div><div class="memory-stone" aria-hidden="true"><i></i><b></b></div><span class="art-caption">HAN SOSEOL / MEMORY 01</span></div><div class="intro-copy"><span class="eyebrow">다른 사람의 삶으로 들어가는 순간</span><h1>이 기억은,<br>이제 당신의 것입니다.</h1><p>한소설이 되어, 그날을 떠올려보세요.</p><div class="intro-meta"><span>6개의 장면</span><i></i><span>소리 없이 · 직접 넘기기</span></div><p class="privacy-hint">${lock}<span>개인의 비밀이 포함됩니다.<br>혼자 볼 수 있을 때 시작하세요.</span></p></div></section>`;
+    return `<section class="intro-screen"><div class="intro-art"><img src="assets/portrait-han.png" alt="한소설의 정면 초상" fetchpriority="high"><div class="portrait-vignette"></div><div class="memory-stone" aria-hidden="true"><i></i><b></b></div><span class="art-caption">HAN SOSEOL / MEMORY 01</span></div><div class="intro-copy"><span class="eyebrow">다른 사람의 삶으로 들어가는 순간</span><h1>이 기억은,<br>이제 당신의 것입니다.</h1><p>한소설이 되어, 그날을 떠올려보세요.</p><div class="intro-meta"><span>6개의 장면</span><i></i><span>소리 없이 · 직접 넘기기</span></div><p class="privacy-hint">${lock}<span>당신만 보는 기억입니다.<br>주변에 화면이 보이지 않는지 확인해주세요.</span></p></div></section>`;
   }
   function progress() {
     return `<nav class="scene-progress" aria-label="기억 장면"><div class="scene-count"><span>한소설의 기억</span><span>${state.finished?'<button type="button" class="notebook-back" data-action="notebook">기억 수첩 ↗</button>':''}<b>${String(state.scene+1).padStart(2,'0')}</b> / 06</span></div><ol>${scenes.map((s,i)=>`<li><button type="button" data-jump="${i}" ${i>state.visited?'disabled':''} ${i===state.scene?'aria-current="step"':''} aria-label="${i+1}번째 장면: ${s.label}"><i></i><span>${s.label}</span></button></li>`).join('')}</ol></nav>`;
   }
   function scene() {
     const s=scenes[state.scene], hidden=s.private&&!state.reveal;
-    const content=hidden?`<div class="secret-gate"><span class="gate-symbol">${lock}</span><span class="eyebrow">나만 보는 기억</span><h1>잠시, 주변을<br>확인해주세요.</h1><p>한소설의 비밀이 담겨 있습니다.<br>화면이 다른 사람에게 보이지 않나요?</p><button type="button" class="reveal-button" data-action="reveal">혼자 있어요 · 기억 보기 ${arrow}</button><small>장면을 나가면 다시 가려집니다.</small></div>`:
+    const content=hidden?`<div class="secret-gate"><span class="gate-symbol">${lock}</span><span class="eyebrow">나만 보는 기억</span><h1>잠시, 주변을<br>확인해주세요.</h1><p>당신의 범인 여부가 담겨 있습니다.<br>다른 사람에게 보이지 않게 확인하세요.</p><button type="button" class="reveal-button" data-action="reveal">내 비밀 확인하기 ${arrow}</button><small>장면을 나가면 다시 가려집니다.</small></div>`:
       `<div class="scene-copy" key="${state.scene}"><div class="scene-kicker"><span>${s.place}</span>${s.private?'<button type="button" data-action="hide">'+lock+' 다시 가리기</button>':''}</div><h1>${s.title}</h1><div class="memory-lines">${s.lines.map(l=>`<p>${l}</p>`).join('')}</div><details class="scene-detail"><summary>${s.detailTitle}<span aria-hidden="true">＋</span></summary><p>${s.detail}</p></details></div>`;
     return `<section class="scene-screen ${hidden?'secret-hidden':''}" aria-label="${state.scene+1}번째 기억"><div class="scene-art ${s.art} ${hidden?'veiled':''}" aria-hidden="true"><img src="${s.image}" alt=""><div class="scene-shade"></div></div>${progress()}<div class="scene-content">${content}<span class="illustration-note">기억을 돕는 연출 이미지 · 실제 단서가 아닙니다</span></div></section>`;
   }
@@ -85,7 +85,7 @@
       ['19:40','식사 시작. 내 자리로 정해둔 곳에 아내가 앉아 있었다.'],
       ['20:00','홍대표가 사망했다.']
     ];
-    const content=relations?`<div class="relationship-list">${rows.map(([img,name,text])=>`<article>${img==='홍'?'<span class="missing-portrait" aria-hidden="true">홍</span>':`<img src="assets/portrait-${img}.png" alt="">`}<div><h2>${name}</h2><p>${text}</p></div></article>`).join('')}</div>`:!state.reveal?`<div class="reference-gate">${lock}<p>내 행동과 비밀이 포함된 동선입니다.<br>혼자 볼 수 있을 때 확인하세요.</p><button type="button" class="primary" data-action="reveal">내 동선 확인하기 ${arrow}</button></div>`:`<button type="button" class="reference-hide" data-action="hide">동선 다시 가리기</button><ol class="recall-timeline">${times.map(([t,copy])=>`<li><time>${t}</time><p>${copy}</p></li>`).join('')}</ol>`;
+    const content=relations?`<div class="relationship-list">${rows.map(([img,name,text])=>`<article>${img==='홍'?'<span class="missing-portrait" aria-hidden="true">홍</span>':`<img src="assets/portrait-${img}.png" alt="">`}<div><h2>${name}</h2><p>${text}</p></div></article>`).join('')}</div>`:`<ol class="recall-timeline">${times.map(([t,copy])=>`<li><time>${t}</time><p>${copy}</p></li>`).join('')}</ol>`;
     return `<section class="notebook reference"><button class="reference-back" type="button" data-action="notebook">← 기억 수첩</button><span class="eyebrow">한소설 · 다시 떠올리기</span><h1>${title}</h1>${content}</section>`;
   }
   function render(focus=true) {
