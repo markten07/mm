@@ -101,6 +101,6 @@ function fixture(){
  c.srvVote=2;c.rVote();assert(root.innerHTML.includes('먼저 인물을 선택해주세요'));
 }
 for(const name of ['1.html','2.html','3.html','4.html']){
- const html=fs.readFileSync(name,'utf8');assert(html.includes('src="assets/player-experience.js"'));assert(html.includes('href="assets/player-experience.css"'));
+ const html=fs.readFileSync(name,'utf8');assert(html.includes('src="assets/player-experience.js?v=2"'));assert(html.includes('href="assets/player-experience.css?v=2"'));
 }
 console.log('PASS: five trays, pooled counts, stacked layers, claim lock, flip/store, last draw snapshot race, empty tray, late response, automatic save, face-up collection viewer, voting');

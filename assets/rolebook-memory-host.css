@@ -18,3 +18,9 @@
 @media(max-height:720px) and (max-width:700px){.intro-copy{margin-top:180px}.intro-copy h1{font-size:27px}.scene-content{margin-top:90px}.scene-copy h1{font-size:26px}.secret-hidden .scene-content{margin-top:38px}}
 
 .rb-text-button.rb-notebook-shortcut{display:block;background:none;color:var(--accent);border:0;border-bottom:1px solid #526244;padding:10px 0;margin-top:20px;font-size:12px;text-align:left}.rb-notebook-shortcut:focus-visible{outline-offset:5px}
+
+/* Expanding a note changes the story height, never the illustration crop. */
+.scene-art,.intro-art{bottom:auto;height:var(--rb-stage-height,100dvh)}
+.scene-art img{animation:none}
+#rb-main{scrollbar-gutter:stable}
+@media(min-width:701px){.intro-art{height:var(--rb-stage-height,100dvh)}}

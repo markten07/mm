@@ -1,0 +1,133 @@
+/* Shared tokens and controls, loaded in both the document and rolebook Shadow DOM. */
+:root,:host{
+  --ui-bg:#101413;--ui-surface:#1b211f;--ui-raised:#252d29;
+  --ui-text:#f2f5f2;--ui-muted:#a3ada6;--ui-faint:#86948b;
+  --ui-accent:#d5debc;--ui-on-accent:#20271a;--ui-line:#303934;
+  --ui-font:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif;
+  --ui-header:64px;--ui-nav:64px;--ui-safe:env(safe-area-inset-bottom,0px);
+}
+.player-header{height:var(--ui-header);min-height:var(--ui-header);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 24px;border-bottom:1px solid var(--ui-line);background:var(--ui-bg);font-family:var(--ui-font)}
+.player-identity,.player-header .rb-identity{display:flex;align-items:center;gap:10px;min-width:0}
+.player-identity img,.player-header .rb-identity img{width:32px;height:36px;border-radius:8px;object-fit:cover;object-position:50% 20%;flex-shrink:0}
+.player-identity strong,.player-header .rb-identity strong{display:block;font-size:14px;font-weight:600;line-height:1.5;color:var(--ui-text)}
+.player-identity small,.player-header .rb-identity small{display:block;font-size:11px;line-height:1.5;color:var(--ui-muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.player-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));height:calc(var(--ui-nav) + var(--ui-safe));padding:4px 16px calc(4px + var(--ui-safe));border-top:1px solid var(--ui-line);background:var(--ui-bg);font-family:var(--ui-font)}
+.player-nav button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:0;padding:6px 4px;border:0;border-radius:10px;background:transparent;color:var(--ui-faint);font:500 11px/1.4 var(--ui-font);cursor:pointer;box-shadow:none}
+.player-nav button[aria-current=page]{color:var(--ui-accent);font-weight:600;box-shadow:none}
+.player-nav button:hover{background:var(--ui-surface)}
+.player-nav .player-nav-icon{display:block;width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.player-nav .player-count{position:absolute;top:4px;left:calc(50% + 9px);padding:1px 5px;min-width:17px;background:var(--ui-accent);color:var(--ui-on-accent);border-radius:12px;font-size:10px;line-height:16px;font-weight:600}
+.player-count:empty{display:none}
+.player-nav button:focus-visible,.player-header button:focus-visible{outline:2px solid var(--ui-accent);outline-offset:-2px}
+
+/* A clear disclosure affordance: purpose, action label and chevron. */
+.scene-detail,.more-context{border:1px solid var(--ui-line);border-radius:14px;background:var(--ui-surface);overflow:hidden;margin-top:20px}
+.scene-detail summary,.more-context summary{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:72px;list-style:none;padding:15px 16px;color:var(--ui-text);cursor:pointer;line-height:1.5}
+.scene-detail summary::-webkit-details-marker,.more-context summary::-webkit-details-marker{display:none}
+.more-context summary:after{display:none}
+.disclosure-copy{display:block;min-width:0;text-align:left;white-space:normal}
+.disclosure-copy strong{display:block;color:var(--ui-text);font-size:14px;font-weight:600;line-height:1.6;word-break:keep-all}
+.disclosure-copy small{display:block;color:var(--ui-muted);font-size:12px;font-weight:400;line-height:1.6;margin-top:4px;white-space:normal}
+.disclosure-action{display:flex;align-items:center;gap:5px;color:var(--ui-accent);font-size:12px;font-weight:500;white-space:nowrap;flex-shrink:0}
+.disclosure-action svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s}
+.disclosure-open{display:none}
+.scene-detail[open] summary span{transform:none}
+details[open]>summary .disclosure-closed{display:none}
+details[open]>summary .disclosure-open{display:inline}
+details[open]>summary .disclosure-action svg{transform:rotate(180deg)}
+button[aria-expanded=true] .disclosure-closed{display:none}
+button[aria-expanded=true] .disclosure-open{display:inline}
+button[aria-expanded=true] .disclosure-action svg{transform:rotate(180deg)}
+.scene-detail[open]>summary,.more-context[open]>summary{border-bottom:1px solid var(--ui-line)}
+.scene-detail>p{padding:16px;margin:0;color:var(--ui-muted);font-size:14px;line-height:1.85}
+.more-context>div{padding:2px 16px 16px}
+.scene-detail summary:focus-visible,.more-context summary:focus-visible{outline:2px solid var(--ui-accent);outline-offset:-3px}
+
+/* Native investigation, collection and vote use the same shell as My Role. */
+body.player-game{background:var(--ui-bg);color:var(--ui-text);font-family:var(--ui-font);font-size:16px;--sans:var(--ui-font);--blue:var(--ui-accent);--blue-l:var(--ui-surface);--g500:var(--ui-muted);--g600:var(--ui-muted);--g200:var(--ui-line);--g900:var(--ui-text);--w:var(--ui-surface)}
+.player-game #app{max-width:1100px;background:var(--ui-bg);min-height:100dvh}
+.player-game .hdr{position:sticky;top:0;z-index:30;backdrop-filter:none}
+.player-game .hdr .me,.player-game .hdr .bk{display:none}
+.player-game .hdr .tt{flex:0 1 auto;font-size:12px;line-height:1.5;font-weight:500;letter-spacing:0;color:var(--ui-muted)}
+.player-game #tabs{position:fixed;top:auto;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:1100px;z-index:35;backdrop-filter:none}
+.player-game #dt,.player-game .dock{display:none!important}
+.player-game #main{width:100%;max-width:720px;margin:0 auto;padding:24px 24px calc(var(--ui-nav) + var(--ui-safe) + 28px)}
+.player-game .ux-board-heading{margin:0 0 16px;align-items:center}
+.player-game .ux-board-heading small{font:500 12px/1.5 var(--ui-font);letter-spacing:0;color:var(--ui-muted)}
+.player-game .ux-board-heading h2,.player-game .ux-page-heading h1{font-size:26px;line-height:1.4;font-weight:650;letter-spacing:-.04em;color:var(--ui-text);margin:3px 0 0}
+.player-game .ux-turns{background:var(--ui-surface);border:0;border-radius:12px;padding:8px 12px;font-size:12px;color:var(--ui-muted)}
+.player-game .ux-turns strong{color:var(--ui-accent);font:600 22px/1.4 var(--ui-font)}
+.player-game .ux-board-instruction,.player-game .ux-page-heading p{font-size:14px;line-height:1.7;color:var(--ui-muted);margin:8px 0 20px;word-break:keep-all}
+.player-game .ux-board{padding:0;border:0;border-radius:0;gap:12px;background:none;box-shadow:none}
+.player-game .ux-tray{padding:14px 12px 12px;border:1px solid var(--ui-line);border-radius:16px;background:var(--ui-surface);box-shadow:none}
+.player-game .ux-tray-mansion{padding:18px 22px}
+.player-game .ux-tray-name h3{font-weight:600;color:var(--ui-text);letter-spacing:-.02em}
+.player-game .ux-tray-name strong{font-family:var(--ui-font);font-weight:600;color:var(--ui-accent)}
+.player-game .ux-tray-mansion .ux-tray-name h3{font-size:20px;letter-spacing:0}
+.player-game .ux-tray-name>span,.player-game .ux-tray-hint{color:var(--ui-muted)}
+.ux-card-ornament{display:none}
+.ux-card-back{background:var(--card-dark)}
+.ux-card-back:before{opacity:.2}
+.player-game .ux-board-note{font-size:12px;color:var(--ui-faint);margin-top:16px}
+.player-game .ux-page-heading{margin-bottom:24px}
+.player-game .ux-page-heading h1 span{color:var(--ui-accent);margin-left:8px}
+.player-game .ux-page-heading p{margin-bottom:8px}
+.player-game .ux-page-heading small{font-size:12px;color:var(--ui-faint);line-height:1.7;display:block}
+.player-game .ux-kit-heading{font-size:16px;font-weight:600;color:var(--ui-text);margin-top:24px}
+.player-game .ux-kit-heading>span{color:var(--ui-muted)}
+.player-game .ux-evidence-grid{gap:18px 14px}
+.ux-card-paper,.ux-flip-front{background:#f0eee5;border-color:#c9c8bd;color:#30372f}
+.ux-front-scroll .ux-source{background:#dfe3d6;color:#4c5847;border-radius:6px}
+.ux-front-kicker{color:#68725f;letter-spacing:0}
+.ux-front-where{border-color:#c9cdbf}
+.ux-clue-copy{color:#3e493a}
+.ux-evidence.ux-card-paper{box-shadow:0 3px 0 -1px #a8b09f;transition:transform .2s}
+.ux-evidence:hover{box-shadow:0 3px 0 -1px #a8b09f}
+.ux-evidence .ux-mini-footer{border-color:#c9cdbf}
+.ux-front-actions{border-color:#c9cdbf}.ux-mark{border-color:#a3ad99;color:#4b5b42}.ux-store{background:#2e3e2b;border-color:#2e3e2b;color:#f2f5ed}
+.player-game .ux-guide{padding:0;margin:0 0 24px;border:0;border-radius:0;background:none;color:var(--ui-muted);font-size:14px;line-height:1.8}
+.player-game .ux-guide strong{font-size:24px;line-height:1.5;color:var(--ui-text);margin-bottom:12px;font-weight:650}
+.player-game .vopt{background:var(--ui-surface);border:1px solid var(--ui-line);border-radius:16px;box-shadow:none}
+.player-game .vopt.ux-selected{border-color:var(--ui-accent);outline:0;background:var(--ui-raised)}
+.player-game .act{background:var(--ui-accent);color:var(--ui-on-accent);border:0;border-radius:12px;font-size:15px;min-height:50px}
+.player-game .kempty{padding:50px 16px;font-size:15px;color:var(--ui-muted);line-height:1.9}
+.player-game .toast{bottom:calc(var(--ui-nav) + var(--ui-safe) + 16px);font:13px/1.6 var(--ui-font);letter-spacing:0;word-break:keep-all}
+
+/* Private reading keeps its cinematic art; ordinary UI uses shared type and spacing. */
+:host{--bg:var(--ui-bg);--ink:var(--ui-text);--text:var(--ui-text);--muted:var(--ui-muted);--faint:var(--ui-faint);--accent:var(--ui-accent);--line:var(--ui-line);--surface:var(--ui-surface);--surface-soft:var(--ui-surface);font-family:var(--ui-font)}
+.memory-app{max-width:1100px;grid-template-rows:var(--ui-header) minmax(0,1fr) auto calc(var(--ui-nav) + var(--ui-safe))}
+.memory-app .player-nav{position:static;transform:none;width:100%;z-index:3}
+.memory-app .tools{gap:16px}.memory-app .tools button{font-size:12px;min-height:44px;color:var(--ui-muted)}
+.memory-app .primary,.identity-gate .primary-button,.rb-stage-task .secondary-button{border-radius:12px;min-height:50px;font:600 14px/1.5 var(--ui-font)}
+.memory-footer{padding:12px 24px;background:var(--ui-bg)}
+.memory-footer .primary>span:first-child{font-size:14px;white-space:normal;text-align:left}
+.memory-footer .footer-note{font-size:11px;color:var(--ui-muted)}
+.notebook h1,.reference-heading h1{font-family:var(--ui-font);font-size:26px;font-weight:650;letter-spacing:-.04em}
+.notebook{padding:30px 24px;max-width:720px}
+.notebook-heading{text-align:left;position:relative;padding-right:72px;margin-bottom:18px}
+.notebook-heading>img{position:absolute;right:0;top:6px;width:56px;height:62px;border-radius:12px;margin:0;filter:none}
+.notebook-heading .eyebrow{font:12px/1.6 var(--ui-font);letter-spacing:0;color:var(--ui-muted)}
+.notebook-heading p{font-size:14px;line-height:1.8;color:var(--ui-muted)}
+.notebook .topic-links>button{padding:18px 0;min-height:80px}
+.notebook .topic-links strong{font-size:15px;font-weight:600}.notebook .topic-links span{font-size:12px;color:var(--ui-muted)}
+.notebook-intro p{font-family:var(--ui-font);font-size:16px;line-height:1.8}
+.notebook .notebook-intro .eyebrow{font-size:12px;letter-spacing:0;color:var(--ui-muted)}
+.reference-screen .more-context{border-radius:14px}
+.rb-stage-task{background:var(--ui-surface);border:1px solid var(--ui-line);border-radius:16px;padding:18px}
+.rb-stage-task h2{font-size:22px;font-weight:600}.rb-stage-task p{color:var(--ui-muted)}
+.rb-stage-task .secondary-button{border:1px solid #69785d;color:var(--ui-accent)}
+.answer-list>div>button{padding:16px;gap:12px;border:1px solid var(--ui-line);border-radius:14px;background:var(--ui-surface);margin-bottom:10px;font-size:14px}
+.answer-list>div{border:0}.answer-list>div>button>span:first-child{white-space:normal}.answer-body{padding:0 12px}
+.answer-list>div>button .disclosure-copy strong{font-size:14px}
+#rb-private{border-radius:18px;background:var(--ui-surface)}
+@media(max-width:700px){
+  :root,:host{--ui-header:64px;--ui-nav:64px}
+  .player-header{padding:0 20px;gap:12px}.player-identity small,.player-header .rb-identity small{max-width:160px;font-size:10px}
+  .player-game #main{padding:22px 20px calc(var(--ui-nav) + var(--ui-safe) + 24px)}
+  .player-game .ux-board{gap:10px}.player-game .ux-tray{padding:10px 8px}.player-game .ux-tray-mansion{padding:14px 18px}
+  .memory-app{grid-template-rows:var(--ui-header) minmax(0,1fr) auto calc(var(--ui-nav) + var(--ui-safe))}
+  .notebook{padding:26px 20px}.reference-screen{padding:24px 20px 30px}.memory-footer{padding:12px 20px}
+  .scene-detail summary,.more-context summary{padding:14px;gap:10px}.scene-detail>p{padding:14px}
+}
+@media(max-width:360px){.player-header{padding:0 16px}.player-game #main{padding-left:16px;padding-right:16px}.player-identity small,.player-header .rb-identity small{max-width:124px}.memory-app .tools{gap:12px}.disclosure-action{gap:3px;font-size:11px}.disclosure-copy strong{font-size:13px}.disclosure-copy small{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.disclosure-action svg{transition:none}}

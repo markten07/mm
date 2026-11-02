@@ -377,9 +377,10 @@ body.culprit .sum b{background:var(--red)}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="assets/player-experience.css">
+<link rel="stylesheet" href="assets/player-experience.css?v=2">
+<link rel="stylesheet" href="assets/player-design-system.css?v=1">
 </head>
-<body>
+<body class="player-game">
 <div id="app">
   <div class="hdr">
     <button class="bk" id="bk">← 뒤로</button>
@@ -1333,9 +1334,10 @@ function showGate(){
 showGate();
 render(); dock();
 </script>
-<script src="assets/player-experience.js"></script>
+<script src="assets/player-experience.js?v=2"></script>
+<script src="assets/player-shell.js?v=1"></script>
 <script src="assets/rolebook-profiles.js?v=2"></script>
 <script src="assets/rolebook-memories.js?v=1"></script>
-<script src="assets/rolebook-ui.js?v=7"></script>
+<script src="assets/rolebook-ui.js?v=8"></script>
 </body>
 </html>

@@ -16,7 +16,7 @@
     M().classList.add('ux-board-main');
     $('#tt').textContent='조사 보드';
     const left=drawsLeft();
-    M().innerHTML=`<div class="ux-board-heading"><div><small>INVESTIGATION BOARD</small><h2>${ROUND_NAME[round]}</h2></div><div class="ux-turns">조사 기회 <strong>${left}</strong>회</div></div>
+    M().innerHTML=`<div class="ux-board-heading"><div><small>공간별 단서 카드</small><h2>${ROUND_NAME[round]}</h2></div><div class="ux-turns">조사 기회 <strong>${left}</strong>회</div></div>
       <p class="ux-board-instruction" role="status">${activeDraw?'선택한 카드를 확인하고 있어요.':left?'원하는 공간의 맨 위 카드를 눌러주세요.':'조사를 마쳤어요. 단서함에서 찾은 내용을 확인하세요.'}</p>
       <section class="ux-board" aria-label="다섯 공간의 조사 카드 보드">${groups.map(([k,name])=>{
         const n=groupPool(k).length, depth=Math.min(17,Math.max(0,n-1)*1.7);
@@ -107,7 +107,7 @@
   function storeCard(request){
     if(request.storing)return;
     request.storing=true;
-    const flight=dialog.querySelector('.ux-card-flight'),dockEl=document.querySelector('.dock'),r=flight.getBoundingClientRect(),d=dockEl?.getBoundingClientRect();
+    const flight=dialog.querySelector('.ux-card-flight'),dockEl=document.querySelector('#tabs [data-t="kit"]')||document.querySelector('.dock'),r=flight.getBoundingClientRect(),d=dockEl?.getBoundingClientRect();
     flight.style.setProperty('--to-x',`${d?d.left+d.width/2-(r.left+r.width/2):0}px`);
     flight.style.setProperty('--to-y',`${d?d.top+d.height/2-(r.top+r.height/2):180}px`);
     flight.classList.add('ux-store-away');
@@ -167,7 +167,7 @@
   };
   rKit=function(){
     $('#tt').textContent='내 단서함';
-    M().innerHTML=`<div class="ux-guide"><strong>자동 보관된 단서 ${found.size}장</strong>조사에서 확보한 카드가 자동으로 모여요. 앞면 카드를 누르면 크게 읽을 수 있습니다.<br>회의 때 단서 이름과 발견 장소를 말로 공유해주세요.</div>`;
+    M().innerHTML=`<header class="ux-page-heading"><h1>단서함 <span>${found.size}</span></h1><p>조사에서 찾은 카드가 자동으로 모여요.<br>카드를 누르면 크게 볼 수 있어요.</p><small>회의에서는 단서 이름과 발견 장소를 말로 공유해주세요.</small></header>`;
     if(!found.size){M().insertAdjacentHTML('beforeend','<div class="kempty">아직 확보한 카드가 없어요.<br>조사에서 카드를 공개하면 자동으로 보관돼요.</div>');return;}
     const card=id=>`<button class="ux-evidence ux-card-paper" data-evidence="${id}" aria-label="${C[id].n} 카드 확대하기"><div class="ux-front-scroll">${frontContent(id)}</div><span class="ux-mini-footer"><span>${starred.has(id)?'★ 중요 단서':'✓ 보관된 단서'}</span><span>확대해서 읽기 ↗</span></span></button>`;
     // Each physical card appears once; important cards keep their star in their own group.
