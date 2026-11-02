@@ -17,6 +17,8 @@
 
 관계, 시간별 전체 행적, 질문별 참고, 배경·남은 기록, 정체, 자기소개를 다시 찾을 수 있다. 백비서와 유감독의 선택적 회의 참고도 유지한다. 자세한 내용은 항목별로 펼친다. 다음 장면 이미지는 해당 인물의 것만 미리 읽는다.
 
+게임 중 재입장하는 사람을 위해 기억을 다 읽기 전에도 첫 화면의 ‘기억 수첩 바로 보기’, 상단 인물명, 하단 ‘내 역할’에서 수첩을 연다. 이 이동은 기억 읽기 완료로 기록하지 않는다. 범인 여부는 수첩에서도 별도 확인을 거친다. 덮기와 움직임 설정 변경 후 펼친 설명과 읽던 스크롤 위치를 복원한다.
+
 ## 보호와 게임 연결
 
 - 화면 덮기·포커스 이탈·백그라운드 전환 시 전체 기억 화면을 가린다.
@@ -89,5 +91,4 @@ A single closed glass jar of amber fruit preserve intended as an ordinary gift, 
 공통 프롬프트에 아래 문장을 이어 붙여 생성했다.
 
 A quiet exterior stone balcony of the same luxury mansion at blue dusk. Rain-dark garden beyond an ornate dark railing, warm amber light spilling through an open doorway behind camera. A plain black smartphone with an unlit blank screen resting on the dry stone ledge under a covered part of the balcony. No person, cigarettes, smoke, text, time display or call log. The composition only evokes a director's outdoor business call; do not imply a visible alibi witness or an exact path. Phone and railing in upper-middle focal plane, lower third shadowed.
-
 

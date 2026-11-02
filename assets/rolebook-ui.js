@@ -7,7 +7,7 @@
   host.hidden=true;host.id='mobile-rolebook';host.setAttribute('aria-label',`${d.name} 캐릭터북`);
   host.style.cssText='position:fixed;inset:0;z-index:60;background:#101211;';
   const root=host.attachShadow({mode:'open'});
-  root.innerHTML=`<link rel="stylesheet" href="assets/character-book-sample.css?v=5"><link rel="stylesheet" href="assets/rolebook-host.css?v=3"><link rel="stylesheet" href="assets/character-memory.css?v=2"><link rel="stylesheet" href="assets/rolebook-memory-host.css?v=1"><div class="rb-viewport"><div class="memory-app"><header class="topbar"><button type="button" class="rb-identity" data-act="home" aria-label="내 역할 첫 화면으로"><img src="assets/portrait-${profile.image}.png" alt=""><span><strong>${d.name}</strong><small id="rb-phase">나의 기억</small></span></button><div class="tools"><button type="button" id="rb-motion" aria-pressed="false" aria-label="움직임 줄이기">움직임</button><button type="button" id="rb-cover" aria-label="화면 덮기">덮기</button></div></header><main id="rb-main" tabindex="-1"></main><footer class="memory-footer" id="rb-action"></footer><nav class="bottom-nav" aria-label="기본 메뉴"><button type="button" data-dest="book" aria-current="page">내 역할</button><button type="button" data-dest="inv">조사</button><button type="button" data-dest="kit">단서함 <span id="rb-count"></span></button></nav></div></div><dialog id="rb-private" aria-labelledby="rb-private-title"><div class="cover-content"><span class="eyebrow">잠시, 현실로</span><div class="covered-orb" aria-hidden="true"></div><h2 id="rb-private-title">기억을 덮어두었습니다.</h2><p>주변에 화면이 보이지 않을 때<br>읽던 곳으로 돌아오세요.</p><button type="button" class="primary" id="rb-resume">이어서 보기 ↗</button><small>마지막 역할 비밀은 다시 가려져 있어요.</small></div></dialog>`;
+  root.innerHTML=`<link rel="stylesheet" href="assets/character-book-sample.css?v=5"><link rel="stylesheet" href="assets/rolebook-host.css?v=3"><link rel="stylesheet" href="assets/character-memory.css?v=2"><link rel="stylesheet" href="assets/rolebook-memory-host.css?v=2"><div class="rb-viewport"><div class="memory-app"><header class="topbar"><button type="button" class="rb-identity" data-act="notebook" aria-label="기억 수첩 열기"><img src="assets/portrait-${profile.image}.png" alt=""><span><strong>${d.name}</strong><small id="rb-phase">나의 기억</small></span></button><div class="tools"><button type="button" id="rb-motion" aria-pressed="false" aria-label="움직임 줄이기">움직임</button><button type="button" id="rb-cover" aria-label="화면 덮기">덮기</button></div></header><main id="rb-main" tabindex="-1"></main><footer class="memory-footer" id="rb-action"></footer><nav class="bottom-nav" aria-label="기본 메뉴"><button type="button" data-dest="book" aria-current="page">내 역할</button><button type="button" data-dest="inv">조사</button><button type="button" data-dest="kit">단서함 <span id="rb-count"></span></button></nav></div></div><dialog id="rb-private" aria-labelledby="rb-private-title"><div class="cover-content"><span class="eyebrow">잠시, 현실로</span><div class="covered-orb" aria-hidden="true"></div><h2 id="rb-private-title">기억을 덮어두었습니다.</h2><p>주변에 화면이 보이지 않을 때<br>읽던 곳으로 돌아오세요.</p><button type="button" class="primary" id="rb-resume">이어서 보기 ↗</button><small>마지막 역할 비밀은 다시 가려져 있어요.</small></div></dialog>`;
   document.body.appendChild(host);
   const $=s=>root.querySelector(s),main=$('#rb-main'),actions=$('#rb-action'),viewport=main;
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -52,11 +52,11 @@
     const f=frames[st.page],hidden=f.final&&!st.visible;
     return `<section class="scene-screen ${hidden?'secret-hidden':''}" aria-label="${st.page+1}번째 기억"><div class="scene-art ${f.art||''}" aria-hidden="true"><img src="assets/${f.image}" alt=""><div class="scene-shade"></div></div><nav class="scene-progress" aria-label="기억 장면"><div class="scene-count"><span>${d.name}의 기억</span><span><b>${String(st.page+1).padStart(2,'0')}</b> / 06</span></div><ol>${frames.map((f,i)=>`<li><button type="button" data-memory="${i}" ${i>st.visited?'disabled':''} ${i===st.page?'aria-current="step"':''} aria-label="${i+1}번째 장면: ${f.label}"><i></i><span>${f.label}</span></button></li>`).join('')}</ol></nav><div class="scene-content"><div class="scene-copy">${f.final?finalGate():`<div class="scene-kicker"><span>${f.place}</span></div><h1>${f.title}</h1><div class="memory-lines">${f.lines.map(t=>`<p>${t}</p>`).join('')}</div><details class="scene-detail"><summary>${f.detailTitle}<span aria-hidden="true">＋</span></summary><p>${f.detail}</p></details>`}</div><span class="illustration-note">기억을 돕는 연출 이미지 · 실제 단서가 아닙니다</span></div></section>`;
   }
-  function memoryIntro(){return `<section class="intro-screen"><div class="intro-art"><img src="assets/portrait-${profile.image}.png" alt="${d.name}의 정면 초상"><div class="portrait-vignette"></div><div class="memory-stone" aria-hidden="true"><i></i><b></b></div><span class="art-caption">${d.name} / MEMORY</span></div><div class="intro-copy"><span class="eyebrow">다른 사람의 삶으로 들어가는 순간</span><h1>이 기억은,<br>이제 당신의 것입니다.</h1><p>${d.name}이 되어, 그날을 떠올려보세요.</p><div class="intro-meta"><span>6개의 장면</span><i></i><span>소리 없이 · 직접 넘기기</span></div><p class="privacy-hint">${lock}<span>당신만 보는 기억입니다.<br>주변에 화면이 보이지 않는지 확인해주세요.</span></p></div></section>`;}
+  function memoryIntro(){return `<section class="intro-screen"><div class="intro-art"><img src="assets/portrait-${profile.image}.png" alt="${d.name}의 정면 초상"><div class="portrait-vignette"></div><div class="memory-stone" aria-hidden="true"><i></i><b></b></div><span class="art-caption">${d.name} / MEMORY</span></div><div class="intro-copy"><span class="eyebrow">다른 사람의 삶으로 들어가는 순간</span><h1>이 기억은,<br>이제 당신의 것입니다.</h1><p>${d.name}이 되어, 그날을 떠올려보세요.</p><div class="intro-meta"><span>6개의 장면</span><i></i><span>소리 없이 · 직접 넘기기</span></div><p class="privacy-hint">${lock}<span>당신만 보는 기억입니다.<br>주변에 화면이 보이지 않는지 확인해주세요.</span></p><button type="button" class="rb-text-button rb-notebook-shortcut" data-act="notebook">기억 수첩 바로 보기 ↗</button></div></section>`;}
   const topics=[...(profile.meeting?[['meeting','회의에서 무슨 말을 하지?','직접 아는 사실과 대화 참고']]:[]),['relations','누가 누구였지?','인물 관계'],['timeline','그때 나는 어디 있었지?','시간별 행적'],['answers','이 질문에 어떻게 답하지?','질문별 참고'],['background','왜 그랬고, 무엇이 남았지?','배경과 남은 기록'],['secret','내 비밀 다시 확인하기','범인 여부와 역할 원칙']];
   const topicLinks=()=>`<div class="topic-links">${topics.map(([key,title,label])=>`<button type="button" data-topic="${key}"><div><strong>${title}</strong><span>${label}</span></div><span aria-hidden="true">→</span></button>`).join('')}</div>`;
-  const key=()=>st.route==='brief'?`brief:${st.page}`:st.route==='reference'?`reference:${st.topic}:${st.topic==='timeline'?st.time:''}`:'home';
-  function remember(){st.scrolls[key()]=viewport.scrollTop;st.expanded[key()]=Array.from(main.querySelectorAll('details')).map(e=>e.open);}
+  const key=()=>st.route==='brief'?`brief:${st.page}`:st.route==='reference'?`reference:${st.topic}:${st.topic==='timeline'?st.time:''}`:st.route==='notebook'||st.route==='home'&&st.done?'notebook':'home';
+  function remember(){if(st.covered)return;st.scrolls[key()]=viewport.scrollTop;st.expanded[key()]=Array.from(main.querySelectorAll('details')).map(e=>e.open);}
   function navigate(route,opts={}){remember();st.visible=false;Object.assign(st,opts,{route});paint(st.scrolls[key()]||0);}
   function reference(){
     const title=st.topic==='intro'?'첫 자기소개':topics.find(t=>t[0]===st.topic)?.[2];
@@ -68,7 +68,7 @@
     if(st.topic==='answers')body=`<p class="lead">받은 질문을 누르면 사실과 답변 예시를 볼 수 있어요.</p><div class="answer-list">${profile.answers.map(([q,fact,say,note],i)=>`<div><button type="button" data-answer="${i}" aria-expanded="${st.answer===i}"><span>${q}</span><span>${st.answer===i?'−':'＋'}</span></button>${st.answer===i?`<div class="answer-body">${block('내가 아는 사실',fact)}${block(d.culprit?'게임에서 말할 수 있는 예시 · 사실과 다를 수 있음':'이렇게 말할 수 있어요','“'+say+'”','spoken-answer')}${block('기억할 점',note)}</div>`:''}</div>`).join('')}</div>`;
     if(st.topic==='background')body=`<p class="lead">필요한 이야기를 골라 펼쳐보세요.</p>${more('왜 그런 선택을 했나요?',motive()+thought())}${more(profile.contextTitle,profile.contexts.map(([t,b])=>block(t,b)).join(''))}${more('내 배경 전체 확인하기',d.truth.map(t=>block(t.h,t.p)).join(''))}${more('내 행동이 남긴 기록',records())}${more('대화할 때의 원칙',rules()+block('연기 참고',profile.tips)+block('말투',d.persona.tone.join(' · '))+'<ul>'+d.persona.act.map(t=>'<li>'+t+'</li>').join('')+'</ul>')}`;
     if(st.topic==='secret')body=gate(`${verdict()}${motive()}${profile.contexts.map(([t,b])=>block(t,b)).join('')}${more('내 배경 전체 보기',d.truth.map(t=>block(t.h,t.p)).join(''))}`);
-    return `<section class="reference-screen"><div class="reference-heading"><button type="button" class="back-button" data-act="home" aria-label="내 역할로 돌아가기">←</button><h1>${st.topic==='intro'?'첫 자기소개':title}</h1></div>${body}</section>`;
+    return `<section class="reference-screen"><div class="reference-heading"><button type="button" class="back-button" data-act="notebook" aria-label="기억 수첩으로 돌아가기">←</button><h1>${st.topic==='intro'?'첫 자기소개':title}</h1></div>${body}</section>`;
   }
   function stageTask(){
     if(!ONLINE)return null;
@@ -87,8 +87,8 @@
   }
   function followStage(){const task=stageTask();if(task?.dest)leaveBook(task.dest);else if(task?.action==='intro')navigate('reference',{topic:'intro'});}
   function home(){
-    if(!st.done)return memoryIntro();
-    return `<section class="notebook"><aside id="rb-stage-task" class="rb-stage-task" aria-label="현재 게임 단계" hidden></aside><div class="notebook-heading"><img src="assets/portrait-${profile.image}.png" alt=""><span class="eyebrow">기억의 끝, 당신의 시작</span><h1>이제, ${d.name}입니다.</h1><p>대화하다 기억이 흐려지면<br>필요한 내용만 다시 찾아보세요.</p></div>${topicLinks()}<div class="notebook-intro"><span class="eyebrow">첫 인사, 이렇게 시작해도 좋아요</span><p>“${d.selfIntro.split('<br>')[0]}”</p><button type="button" data-intro class="rb-text-button">자기소개 전체 보기 ↗</button></div><button type="button" class="restart-reading" data-act="restart">기억 처음부터 다시 보기 ↗</button></section>`;
+    if(!st.done&&st.route!=='notebook')return memoryIntro();
+    return `<section class="notebook"><aside id="rb-stage-task" class="rb-stage-task" aria-label="현재 게임 단계" hidden></aside><div class="notebook-heading"><img src="assets/portrait-${profile.image}.png" alt=""><span class="eyebrow">${st.done?'기억의 끝, 당신의 시작':'필요한 기억부터 찾아보세요'}</span><h1>${st.done?'이제, '+d.name+'입니다.':d.name+'의 기억 수첩'}</h1><p>대화하다 기억이 흐려지면<br>필요한 내용만 다시 찾아보세요.</p></div>${topicLinks()}<div class="notebook-intro"><span class="eyebrow">첫 인사, 이렇게 시작해도 좋아요</span><p>“${d.selfIntro.split('<br>')[0]}”</p><button type="button" data-intro class="rb-text-button">자기소개 전체 보기 ↗</button></div><button type="button" class="restart-reading" data-act="restart">${st.started?'기억 처음부터 다시 보기':'여섯 장면으로 기억 받기'} ↗</button></section>`;
   }
   function action(name){
     if(name==='start'){st.started=true;navigate('brief');}
@@ -96,20 +96,21 @@
     else if(name==='next'){if(frames[st.page].final&&!st.visible)return;if(st.page===frames.length-1){st.done=true;navigate('home');}else {st.visited=Math.max(st.visited,st.page+1);navigate('brief',{page:st.page+1});}}
     else if(name==='prev')navigate('brief',{page:st.page-1});
     else if(name==='home')navigate('home');
+    else if(name==='notebook')navigate('notebook');
     else if(name==='stage')followStage();
     else if(name==='reveal'){st.visible=true;st.read=true;paint(viewport.scrollTop);}
     else if(name==='hide'){st.visible=false;paint(viewport.scrollTop);}
     else if(name==='cover'){conceal();restoreCover();}
   }
   function paint(scroll=0){
-    const brief=st.route==='brief',gated=brief&&frames[st.page].final&&!st.visible;
+    const brief=st.route==='brief',notebook=st.route==='notebook'||st.route==='home'&&st.done,gated=brief&&frames[st.page].final&&!st.visible;
     $('.memory-app').classList.toggle('intro-mode',st.route==='home'&&!st.done);
     $('.memory-app').classList.toggle('is-memory',brief);
-    $('.memory-app').classList.toggle('is-reference',st.route==='reference'||st.done&&!brief);
+    $('.memory-app').classList.toggle('is-reference',st.route==='reference'||notebook);
     host.classList.toggle('rb-covered',st.covered);host.classList.toggle('reduced-motion',st.reduced);
     $('#rb-motion').textContent=st.reduced?'움직임 꺼짐':'움직임';$('#rb-motion').setAttribute('aria-pressed',String(st.reduced));
     main.innerHTML=brief?memoryScene():st.route==='reference'?reference():home();
-    actions.innerHTML=brief?`<div class="footer-inner"><div class="scene-controls"><button type="button" class="previous" data-act="${st.page?'prev':'home'}" aria-label="${st.page?'이전 장면':'시작 화면으로'}">← <span>${st.page?'이전':'처음'}</span></button><button type="button" class="primary" data-act="next" ${gated?'disabled':''}>${gated?'내 비밀을 먼저 확인해주세요':frames[st.page].final?'기억 수첩 열기':'다음 기억'} <span aria-hidden="true">↗</span></button></div><span class="footer-note">${gated?'마지막 정체는 당신만 확인하세요.':'자동으로 넘어가지 않아요. 천천히 확인하세요.'}</span></div>`:`<div class="footer-inner"><button type="button" class="primary" ${st.route==='home'?'id="rb-home-primary"':''} data-act="${st.route==='reference'?'home':st.done?'cover':'start'}"><span>${st.route==='reference'?'기억 수첩으로 돌아가기':st.done?'화면 덮고 다음 안내 기다리기':st.started?'읽던 기억 이어보기':d.name+'의 기억 받기'}</span><span aria-hidden="true">↗</span></button></div>`;
+    actions.innerHTML=brief?`<div class="footer-inner"><div class="scene-controls"><button type="button" class="previous" data-act="${st.page?'prev':'home'}" aria-label="${st.page?'이전 장면':'시작 화면으로'}">← <span>${st.page?'이전':'처음'}</span></button><button type="button" class="primary" data-act="next" ${gated?'disabled':''}>${gated?'내 비밀을 먼저 확인해주세요':frames[st.page].final?'기억 수첩 열기':'다음 기억'} <span aria-hidden="true">↗</span></button></div><span class="footer-note">${gated?'마지막 정체는 당신만 확인하세요.':'자동으로 넘어가지 않아요. 천천히 확인하세요.'}</span></div>`:`<div class="footer-inner"><button type="button" class="primary" ${st.route==='home'||notebook?'id="rb-home-primary"':''} data-act="${st.route==='reference'?'notebook':notebook?'cover':'start'}"><span>${st.route==='reference'?'기억 수첩으로 돌아가기':notebook?'화면 덮고 다음 안내 기다리기':st.started?'읽던 기억 이어보기':d.name+'의 기억 받기'}</span><span aria-hidden="true">↗</span></button></div>`;
     root.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>action(b.dataset.act));
     main.querySelectorAll('[data-memory]').forEach(b=>b.onclick=()=>{if(!b.disabled)navigate('brief',{page:Number(b.dataset.memory)});});
     main.querySelector('[data-intro]')?.addEventListener('click',()=>navigate('reference',{topic:'intro'}));
@@ -138,18 +139,18 @@
       }
     }
     const homePrimary=$('#rb-home-primary');
-    if(homePrimary&&st.done){homePrimary.dataset.act=task?.label?'stage':'cover';homePrimary.querySelector('span').textContent=task?.label||'화면 덮고 다음 안내 기다리기';}
+    if(homePrimary&&(st.done||st.route==='notebook')){homePrimary.dataset.act=task?.label?'stage':'cover';homePrimary.querySelector('span').textContent=task?.label||'화면 덮고 다음 안내 기다리기';}
 
   }
-  function conceal(){st.visible=false;st.covered=true;if($('#rb-private').open)$('#rb-private').close();paint(viewport.scrollTop);}
+  function conceal(){remember();st.visible=false;st.covered=true;if($('#rb-private').open)$('#rb-private').close();paint(st.scrolls[key()]||0);}
   function restoreCover(){if(!host.hidden&&st.covered&&!$('#rb-private').open)$('#rb-private').showModal();}
-  function resumeCover(){st.covered=false;$('#rb-private').close();paint(viewport.scrollTop);}
+  function resumeCover(){st.covered=false;$('#rb-private').close();paint(st.scrolls[key()]||0);}
   $('#rb-cover').onclick=()=>action('cover');$('#rb-resume').onclick=resumeCover;
   $('#rb-private').addEventListener('cancel',e=>{e.preventDefault();resumeCover();});
-  $('#rb-motion').onclick=()=>{st.reduced=!st.reduced;paint(viewport.scrollTop);};
-  reduced.addEventListener('change',e=>{st.reduced=e.matches;paint(viewport.scrollTop);});
+  $('#rb-motion').onclick=()=>{remember();st.reduced=!st.reduced;paint(st.scrolls[key()]||0);};
+  reduced.addEventListener('change',e=>{remember();st.reduced=e.matches;paint(st.scrolls[key()]||0);});
   root.querySelectorAll('[data-dest]').forEach(b=>b.onclick=()=>{
-    if(b.dataset.dest==='book'){navigate('home');return;}
+    if(b.dataset.dest==='book'){navigate('notebook');return;}
     leaveBook(b.dataset.dest);
   });
   const originalRender=render, originalNet=dockNet;

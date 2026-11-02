@@ -82,3 +82,18 @@ actionContext.action('next');assert.equal(transitions.length,0);assert.equal(mem
 memoryState.visible=true;actionContext.action('next');assert.equal(memoryState.done,true);assert.equal(transitions.at(-1),'home');
 memoryState.page=3;memoryState.visible=false;actionContext.action('next');assert.equal(memoryState.page,4);
 console.log('PASS: six-scene role memories, role-specific image paths, final identity confirmation cannot be bypassed on revisit');
+// Quick references must remain available before the optional memory sequence is complete.
+memoryState.done=false;memoryState.visible=false;
+actionContext.action('notebook');assert.equal(transitions.at(-1),'notebook');assert.equal(memoryState.done,false);
+// Covering/repeated background events must save the live disclosure and scroll state first.
+const rememberFn=ui.slice(ui.indexOf('  function remember(){'),ui.indexOf('  function navigate('));
+const concealFn=ui.slice(ui.indexOf('  function conceal(){'),ui.indexOf('  function restoreCover('));
+const preserveState={visible:true,covered:false,scrolls:{},expanded:{}};
+let detailOpen=true;const paintScrolls=[];
+const preserveContext={st:preserveState,key:()=> 'reference:background',viewport:{scrollTop:246},main:{querySelectorAll:()=>[{open:detailOpen}]},$:()=>({open:false}),paint(scroll){paintScrolls.push(scroll);}};
+vm.createContext(preserveContext);vm.runInContext(rememberFn+concealFn,preserveContext);
+preserveContext.conceal();assert.equal(preserveState.covered,true);assert.equal(preserveState.visible,false);
+assert.equal(preserveState.scrolls['reference:background'],246);assert.equal(preserveState.expanded['reference:background'][0],true);
+detailOpen=false;preserveContext.viewport.scrollTop=0;preserveContext.conceal();
+assert.equal(preserveState.expanded['reference:background'][0],true);assert.equal(paintScrolls.at(-1),246);
+console.log('PASS: notebook can open before reading completion; covering preserves expanded sections and reading position across repeated events');
