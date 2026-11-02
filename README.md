@@ -49,6 +49,8 @@ GitHub Pages는 GitHub Free에서 Public 저장소를 지원합니다. Private �
 ## 구성
 
 - `assets/rolebook-ui.js`: 공유 캐릭터북과 게임 화면 연결
+- `assets/rolebook-memories.js`: 네 인물의 6컷 기억 연출과 독백
+- `assets/rolebook-memory-host.css`: 실제 캐릭터 화면의 기억·수첩 디자인
 - `assets/rolebook-profiles.js`: 인물별 행동 이유·행적·대화 참고
 - `assets/player-experience.js`: 조사·자동 보관·단서함·투표 UI
 - `assets/room-qr.js`: 현재 배포 주소와 방 코드 기반 QR

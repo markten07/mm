@@ -1,6 +1,7 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
 const context={window:{}};vm.createContext(context);
 vm.runInContext(fs.readFileSync('assets/rolebook-profiles.js','utf8'),context);
+vm.runInContext(fs.readFileSync('assets/rolebook-memories.js','utf8'),context);
 const profiles=context.window.ROLEBOOK_PROFILES;
 for(const [file,key] of [['1.html','yun'],['2.html','han'],['3.html','bak'],['4.html','yu']]){
  const html=fs.readFileSync(file,'utf8');
@@ -18,6 +19,15 @@ for(const [file,key] of [['1.html','yun'],['2.html','han'],['3.html','bak'],['4.
  assert(p.scenes.length>=2);
  assert(p.answers.every(a=>a.length===4&&a.every(Boolean)));
  assert(html.indexOf('assets/rolebook-profiles.js')<html.indexOf('assets/rolebook-ui.js'));
+ const frames=context.window.ROLEBOOK_MEMORIES[key];
+ assert.equal(frames.length,5,`${file}: five narrative memories before final identity`);
+ for(const f of frames){
+  assert(f.label&&f.place&&f.title&&f.detailTitle&&f.detail);
+  assert.equal(f.lines.length,2,`${key}: concise narration`);
+  assert(!f.final&&!f.private,`${key}: narrative memories are not repeatedly gated`);
+  assert(fs.existsSync(`assets/${f.image}`),`${key}: missing memory ${f.image}`);
+ }
+ assert(html.indexOf('assets/rolebook-memories.js')<html.indexOf('assets/rolebook-ui.js'));
 }
 // These differences are essential to fair play: witnesses must not receive a killer's private facts.
 const baek=JSON.stringify(profiles.bak);
@@ -26,6 +36,13 @@ assert(!baek.includes('윤꽃집이 범인'));
 assert(profiles.bak.timeline[7][1].includes('직접 보지 못했습니다'));
 assert(profiles.han.limits.includes('확인된 사실이 아닙니다'));
 assert(profiles.yun.rule.includes('거짓 알리바이'));
+const memory=context.window.ROLEBOOK_MEMORIES;
+assert(!JSON.stringify(memory.bak).includes('수프에 살충제'));
+assert(!JSON.stringify(memory.yu).includes('독이 든 얼음'));
+assert(!JSON.stringify(memory.han).includes('윤꽃집이 범인'));
+assert(memory.bak[4].lines.some(t=>t.includes('안에서 한 일은 못 봤다')));
+assert(memory.yu[3].lines.some(t=>t.includes('17:40부터 18:05')));
+assert(memory.yun[3].detail.includes('알리바이'));
 for(const key of ['han','bak','yu'])assert(!profiles[key].rule.includes('거짓 알리바이를 말할 수'));
 new vm.Script(fs.readFileSync('assets/rolebook-ui.js','utf8'));
 console.log('PASS: four role mappings, full timeline/record coverage, relationship portraits, role-specific knowledge boundaries');
@@ -36,7 +53,7 @@ const gameApp={inert:false},gate={style:{display:'none'}},main={innerHTML:'old r
 let renders=0,conceals=0;
 const bridgeContext={host:{hidden:true},tab:'book',srvVote:0,M:()=>main,
  document:{getElementById:id=>id==='app'?gameApp:gate},sync(){},remember(){},conceal(){conceals++;},
- rBook(){},render(){renders++;if(bridgeContext.tab==='book'&&!bridgeContext.srvVote)bridgeContext.rBook();},dockNet(){}};
+ restoreCover(){},rBook(){},render(){renders++;if(bridgeContext.tab==='book'&&!bridgeContext.srvVote)bridgeContext.rBook();},dockNet(){}};
 vm.createContext(bridgeContext);vm.runInContext(bridge,bridgeContext);
 bridgeContext.render();assert.equal(bridgeContext.host.hidden,false);assert.equal(gameApp.inert,true);assert.equal(main.innerHTML,'');
 bridgeContext.tab='inv';bridgeContext.render();assert.equal(bridgeContext.host.hidden,true);assert.equal(gameApp.inert,false);assert.equal(conceals,1);
@@ -55,3 +72,13 @@ phaseContext.srvPhase='롤카드 확인';assert.equal(phaseContext.stageTask().d
 phaseContext.srvPhase='진상 공개';assert.equal(phaseContext.stageTask().dest,undefined);
 phaseContext.ONLINE=false;assert.equal(phaseContext.stageTask(),null);
 console.log('PASS: live phase actions, introduction shortcut, role-reading and reveal stay non-forcing, offline stays isolated');
+// A previous reveal must never let a revisited final identity advance while hidden.
+const actionFn=ui.slice(ui.indexOf('  function action(name){'),ui.indexOf('  function paint(scroll=0){'));
+const memoryState={page:5,read:true,visible:false,done:false,visited:5};
+const transitions=[];
+const actionContext={st:memoryState,frames:[{},{},{},{},{},{final:true}],navigate(route,opts={}){transitions.push(route);Object.assign(memoryState,opts,{route});}};
+vm.createContext(actionContext);vm.runInContext(actionFn,actionContext);
+actionContext.action('next');assert.equal(transitions.length,0);assert.equal(memoryState.done,false);
+memoryState.visible=true;actionContext.action('next');assert.equal(memoryState.done,true);assert.equal(transitions.at(-1),'home');
+memoryState.page=3;memoryState.visible=false;actionContext.action('next');assert.equal(memoryState.page,4);
+console.log('PASS: six-scene role memories, role-specific image paths, final identity confirmation cannot be bypassed on revisit');
