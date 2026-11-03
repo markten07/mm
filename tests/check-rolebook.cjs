@@ -16,15 +16,16 @@ for(const [file,key] of [['1.html','yun'],['2.html','han'],['3.html','bak'],['4.
  for(const [name] of me.rel)assert(p.labels[name],`${file}: relationship ${name}`);
  assert(fs.existsSync(`assets/portrait-${p.image}.png`));
  assert.equal(p.motive.length,3);
+ assert(p.briefing.secret&&p.briefing.stance,`${key}: private action and speaking stance`);
  assert(p.scenes.length>=2);
  assert(p.answers.every(a=>a.length===4&&a.every(Boolean)));
  assert(html.indexOf('assets/rolebook-profiles.js')<html.indexOf('assets/rolebook-ui.js'));
  const frames=context.window.ROLEBOOK_MEMORIES[key];
- assert.equal(frames.length,5,`${file}: five narrative memories before final identity`);
+ assert.equal(frames.length,5,`${file}: five narrative memories after private role briefing`);
  for(const f of frames){
   assert(f.label&&f.place&&f.title&&f.detailTitle&&f.detail);
   assert.equal(f.lines.length,2,`${key}: concise narration`);
-  assert(!f.final&&!f.private,`${key}: narrative memories are not repeatedly gated`);
+  assert(!f.identity&&!f.private,`${key}: narrative memories are not repeatedly gated`);
   assert(fs.existsSync(`assets/${f.image}`),`${key}: missing memory ${f.image}`);
  }
  assert(html.indexOf('assets/rolebook-memories.js')<html.indexOf('assets/rolebook-ui.js'));
@@ -72,16 +73,41 @@ phaseContext.srvPhase='롤카드 확인';assert.equal(phaseContext.stageTask().d
 phaseContext.srvPhase='진상 공개';assert.equal(phaseContext.stageTask().dest,undefined);
 phaseContext.ONLINE=false;assert.equal(phaseContext.stageTask(),null);
 console.log('PASS: live phase actions, introduction shortcut, role-reading and reveal stay non-forcing, offline stays isolated');
-// A previous reveal must never let a revisited final identity advance while hidden.
+// Private orientation comes first in every role, without changing the narrative facts.
+const frameDeclaration=ui.match(/  const frames=.*;/)[0];
+for(const [role,profile] of Object.entries(profiles)){
+ const frameContext={MYKEY:role,profile,window:context.window};vm.createContext(frameContext);
+ vm.runInContext(frameDeclaration+'\nthis.ordered=frames;',frameContext);
+ assert.equal(frameContext.ordered.length,6);
+ assert.equal(frameContext.ordered[0].identity,true);
+ assert.equal(frameContext.ordered[0].image,`portrait-${profile.image}.png`);
+ assert.equal(JSON.stringify(frameContext.ordered.slice(1)),JSON.stringify(memory[role]));
+}
+// Neither Next nor a previously visited progress button may bypass the hidden first role.
 const actionFn=ui.slice(ui.indexOf('  function action(name){'),ui.indexOf('  function paint(scroll=0){'));
-const memoryState={page:5,read:true,visible:false,done:false,visited:5};
+const visitFn=ui.slice(ui.indexOf('  function canVisitMemory('),ui.indexOf('  function memoryScene(){'));
+const memoryState={page:0,read:false,visible:false,done:false,visited:0};
 const transitions=[];
-const actionContext={st:memoryState,frames:[{},{},{},{},{},{final:true}],navigate(route,opts={}){transitions.push(route);Object.assign(memoryState,opts,{route});}};
-vm.createContext(actionContext);vm.runInContext(actionFn,actionContext);
-actionContext.action('next');assert.equal(transitions.length,0);assert.equal(memoryState.done,false);
-memoryState.visible=true;actionContext.action('next');assert.equal(memoryState.done,true);assert.equal(transitions.at(-1),'home');
-memoryState.page=3;memoryState.visible=false;actionContext.action('next');assert.equal(memoryState.page,4);
-console.log('PASS: six-scene role memories, role-specific image paths, final identity confirmation cannot be bypassed on revisit');
+const actionContext={st:memoryState,frames:[{identity:true},{},{},{},{},{}],viewport:{scrollTop:0},paint(){},navigate(route,opts={}){transitions.push(route);Object.assign(memoryState,opts,{route,visible:false});}};
+vm.createContext(actionContext);vm.runInContext(actionFn+visitFn,actionContext);
+actionContext.action('next');assert.equal(transitions.length,0);assert.equal(memoryState.done,false);assert.equal(actionContext.canVisitMemory(1),false);
+actionContext.action('reveal');assert.equal(memoryState.read,true);actionContext.action('next');
+assert.equal(memoryState.page,1);assert.equal(memoryState.done,false);assert.equal(memoryState.visible,false);
+for(let i=1;i<=5;i++)actionContext.action('next');
+assert.equal(memoryState.done,true);assert.equal(transitions.at(-1),'home');
+memoryState.page=0;memoryState.visible=false;memoryState.done=false;
+assert.equal(actionContext.canVisitMemory(5),false);const transitionCount=transitions.length;
+actionContext.action('next');assert.equal(transitions.length,transitionCount);
+actionContext.action('reveal');assert.equal(actionContext.canVisitMemory(5),true);
+// The public animation example follows the same first-briefing sequence and Han's exact summary.
+const sample=fs.readFileSync('assets/character-memory.js','utf8'),sampleContext={};vm.createContext(sampleContext);
+vm.runInContext(sample.slice(sample.indexOf('  const roleBrief='),sample.indexOf('  const $ ='))+'\nthis.preview={roleBrief,scenes};',sampleContext);
+assert.equal(JSON.stringify(sampleContext.preview.roleBrief),JSON.stringify(profiles.han.briefing));
+assert.equal(sampleContext.preview.scenes.length,6);assert.equal(sampleContext.preview.scenes[0].private,true);
+assert(sampleContext.preview.scenes.slice(1).every(s=>!s.private));
+assert(!profiles.han.briefing.stance.includes('거짓 알리바이'));assert(profiles.yun.briefing.stance.includes('거짓 알리바이'));
+for(const key of ['han','bak','yu'])assert(profiles[key].briefing.stance.includes('사실대로'));
+console.log('PASS: private role first, own action and speaking policy, six scenes, hidden-role navigation guard, ungated narrative completion and matching preview');
 // Quick references must remain available before the optional memory sequence is complete.
 memoryState.done=false;memoryState.visible=false;
 actionContext.action('notebook');assert.equal(transitions.at(-1),'notebook');assert.equal(memoryState.done,false);
