@@ -23,6 +23,7 @@ jobs:
       - name: Verify game, rolebook, and deployment assets
         run: |
           node tests/check-game.cjs
+          node tests/check-host.cjs
           node tests/check-experience.cjs
           node tests/check-rolebook.cjs
           node tests/check-player-shell.cjs

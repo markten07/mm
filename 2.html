@@ -841,9 +841,10 @@ function joinRoom(code, ok, fail){
 function claim(id, done){
   if(ONLINE && (!srvRound || srvRound!==round)){ done(false); return; }
   if(!ONLINE){ done(true); return; }
-  // "누가" 뿐 아니라 "몇 차 조사에서" 가져갔는지도 남긴다 → 새로고침 복구에 쓰인다
+  // Keep the original round even if the transaction retries after a phase change.
+  const claimRound=round;
   roomRef('taken/'+id).transaction(
-    cur => (cur===null ? MYKEY+'#'+round : undefined),
+    cur => (cur===null && srvRound===claimRound && round===claimRound ? MYKEY+'#'+claimRound : undefined),
     (err, committed) => { committed ? done(true) : done(false); },
     false
   );

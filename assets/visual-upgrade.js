@@ -172,25 +172,20 @@
       if (!screen) return [];
       if (screen.id === 's-intro') return qsa('.vu-gm-copy h2,.vu-gm-copy p', screen).map(x => x.innerText);
       if (screen.id === 's-pro') return qsa('.pro-voice-copy>span', screen).map(x => x.textContent);
-      if (screen.id === 's-round') return qsa('#rname,#rdesc,#script p,#script .warrant', screen).map(x => x.innerText);
+      if (screen.id === 's-round') return qsa('#host-primary,#host-secondary', screen).map(x => x.textContent);
       if (screen.id === 's-rev') return qsa('.rvcard h2,.rvcard .rv-narration', screen).map(x => x.textContent);
       return [];
     }), status);
 
-    const intro = qs('#s-intro');
-    if (intro) {
-      const hero = document.createElement('div');
-      hero.className = 'vu-gm-hero';
-      hero.innerHTML = `<div class="vu-gm-copy">
-        <div class="vu-kicker">CASE 02 · THE MANSION</div>
-        <h2>건배가 끝난 뒤,<br>한 사람만 죽었다.</h2>
-        <div class="vu-facts"><span>4인 플레이</span><span>약 90분</span><span>추리 난이도 ●●●○○</span></div>
-      </div>`;
-      intro.insertBefore(hero, intro.firstChild);
-    }
+    // One optional narrator control; no automatic speech during conversation.
+    const ambient = qs('[data-vu-ambient]', header);
+    if (ambient) ambient.remove();
+    const label = qs('[data-vu-speak] .vu-text', header);
+    if (label) label.textContent = '안내 듣기';
+    qs('[data-vu-speak]', header)?.setAttribute('aria-label','안내 듣기');
 
     document.addEventListener('click', e => {
-      if (e.target.closest('#proPlay,#proStop,#proPrev,#skip,#rvPlay,#rvStop,#rvPrev,#go,#tReset')) stopSpeech();
+      if (e.target.closest('#proPlay,#proSkip,#proPrev,#skip,#prevStep,#rvPlay,#rvSkip,#rvPrev,#go,#newGame')) stopSpeech();
     });
   }
 
