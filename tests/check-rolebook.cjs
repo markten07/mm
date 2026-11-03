@@ -53,7 +53,7 @@ const gameApp={inert:false},gate={style:{display:'none'}},main={innerHTML:'old r
 let renders=0,conceals=0;
 const bridgeContext={host:{hidden:true},tab:'book',srvVote:0,M:()=>main,
  document:{getElementById:id=>id==='app'?gameApp:gate},sync(){},remember(){},conceal(){conceals++;},
- restoreCover(){},rBook(){},render(){renders++;if(bridgeContext.tab==='book'&&!bridgeContext.srvVote)bridgeContext.rBook();},dockNet(){}};
+ restoreCover(){},portal:{present(){}},rBook(){},render(){renders++;if(bridgeContext.tab==='book'&&!bridgeContext.srvVote)bridgeContext.rBook();},dockNet(){}};
 vm.createContext(bridgeContext);vm.runInContext(bridge,bridgeContext);
 bridgeContext.render();assert.equal(bridgeContext.host.hidden,false);assert.equal(gameApp.inert,true);assert.equal(main.innerHTML,'');
 bridgeContext.tab='inv';bridgeContext.render();assert.equal(bridgeContext.host.hidden,true);assert.equal(gameApp.inert,false);assert.equal(conceals,1);
@@ -90,7 +90,7 @@ const rememberFn=ui.slice(ui.indexOf('  function remember(){'),ui.indexOf('  fun
 const concealFn=ui.slice(ui.indexOf('  function conceal(){'),ui.indexOf('  function restoreCover('));
 const preserveState={visible:true,covered:false,scrolls:{},expanded:{}};
 let detailOpen=true;const paintScrolls=[];
-const preserveContext={st:preserveState,key:()=> 'reference:background',viewport:{scrollTop:246},main:{querySelectorAll:()=>[{open:detailOpen}]},$:()=>({open:false}),paint(scroll){paintScrolls.push(scroll);}};
+const preserveContext={portal:{cancel(){}},st:preserveState,key:()=> 'reference:background',viewport:{scrollTop:246},main:{querySelectorAll:()=>[{open:detailOpen}]},$:()=>({open:false}),paint(scroll){paintScrolls.push(scroll);}};
 vm.createContext(preserveContext);vm.runInContext(rememberFn+concealFn,preserveContext);
 preserveContext.conceal();assert.equal(preserveState.covered,true);assert.equal(preserveState.visible,false);
 assert.equal(preserveState.scrolls['reference:background'],246);assert.equal(preserveState.expanded['reference:background'][0],true);

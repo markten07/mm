@@ -7,7 +7,7 @@
   host.hidden=true;host.id='mobile-rolebook';host.setAttribute('aria-label',`${d.name} 캐릭터북`);
   host.style.cssText='position:fixed;inset:0;z-index:60;background:#101211;';
   const root=host.attachShadow({mode:'open'});
-  root.innerHTML=`<link rel="stylesheet" href="assets/character-book-sample.css?v=5"><link rel="stylesheet" href="assets/rolebook-host.css?v=3"><link rel="stylesheet" href="assets/character-memory.css?v=2"><link rel="stylesheet" href="assets/rolebook-memory-host.css?v=3"><link rel="stylesheet" href="assets/player-design-system.css?v=2"><div class="rb-viewport"><div class="memory-app"><header class="topbar player-header"><button type="button" class="rb-identity" data-act="notebook" aria-label="기억 수첩 열기"><img src="assets/portrait-${profile.image}.png" alt=""><span><strong>${d.name}</strong><small id="rb-phase">나의 기억</small></span></button><div class="tools"><button type="button" id="rb-motion" aria-pressed="false" aria-label="움직임 줄이기">움직임</button><button type="button" id="rb-cover" aria-label="화면 덮기">덮기</button></div></header><main id="rb-main" tabindex="-1"></main><footer class="memory-footer" id="rb-action"></footer><nav class="bottom-nav player-nav" aria-label="기본 메뉴"><button type="button" data-dest="book" aria-current="page">${window.PLAYER_UI.icon('book')}<span>내 역할</span></button><button type="button" data-dest="inv">${window.PLAYER_UI.icon('inv')}<span>조사</span></button><button type="button" data-dest="kit">${window.PLAYER_UI.icon('kit')}<span>단서함</span><span class="player-count" id="rb-count"></span></button></nav></div></div><dialog id="rb-private" aria-labelledby="rb-private-title"><div class="cover-content"><span class="eyebrow">잠시, 현실로</span><div class="covered-orb" aria-hidden="true"></div><h2 id="rb-private-title">기억을 덮어두었습니다.</h2><p>주변에 화면이 보이지 않을 때<br>읽던 곳으로 돌아오세요.</p><button type="button" class="primary" id="rb-resume">이어서 보기 ↗</button><small>마지막 역할 비밀은 다시 가려져 있어요.</small></div></dialog>`;
+  root.innerHTML=`<link rel="stylesheet" href="assets/character-book-sample.css?v=5"><link rel="stylesheet" href="assets/rolebook-host.css?v=3"><link rel="stylesheet" href="assets/character-memory.css?v=2"><link rel="stylesheet" href="assets/rolebook-memory-host.css?v=3"><link rel="stylesheet" href="assets/player-design-system.css?v=2"><link rel="stylesheet" href="assets/memory-portal.css?v=1"><div class="rb-viewport"><div class="memory-app"><header class="topbar player-header"><button type="button" class="rb-identity" data-act="notebook" aria-label="기억 수첩 열기"><img src="assets/portrait-${profile.image}.png" alt=""><span><strong>${d.name}</strong><small id="rb-phase">나의 기억</small></span></button><div class="tools"><button type="button" id="rb-motion" aria-pressed="false" aria-label="움직임 줄이기">움직임</button><button type="button" id="rb-cover" aria-label="화면 덮기">덮기</button></div></header><main id="rb-main" tabindex="-1"></main><footer class="memory-footer" id="rb-action"></footer><nav class="bottom-nav player-nav" aria-label="기본 메뉴"><button type="button" data-dest="book" aria-current="page">${window.PLAYER_UI.icon('book')}<span>내 역할</span></button><button type="button" data-dest="inv">${window.PLAYER_UI.icon('inv')}<span>조사</span></button><button type="button" data-dest="kit">${window.PLAYER_UI.icon('kit')}<span>단서함</span><span class="player-count" id="rb-count"></span></button></nav></div></div><dialog id="rb-private" aria-labelledby="rb-private-title"><div class="cover-content"><span class="eyebrow">잠시, 현실로</span><div class="covered-orb" aria-hidden="true"></div><h2 id="rb-private-title">기억을 덮어두었습니다.</h2><p>주변에 화면이 보이지 않을 때<br>읽던 곳으로 돌아오세요.</p><button type="button" class="primary" id="rb-resume">이어서 보기 ↗</button><small>마지막 역할 비밀은 다시 가려져 있어요.</small></div></dialog>`;
   document.body.appendChild(host);
   const $=s=>root.querySelector(s),main=$('#rb-main'),actions=$('#rb-action'),viewport=main;
   const fitArtwork=()=>{if(main.clientHeight)host.style.setProperty('--rb-stage-height',`${main.clientHeight}px`);};
@@ -15,6 +15,7 @@
   artViewportObserver.observe(main);
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
   const st={route:'home',page:0,started:false,done:false,topic:'',time:profile.before,answer:-1,visible:false,read:false,scrolls:{},expanded:{},visited:0,covered:false,reduced:reduced.matches};
+  const portal=window.MemoryPortal.create({root,stage:main,content:$('.memory-app'),portrait:`assets/portrait-${profile.image}.png`,images:frames.slice(1,3).map(f=>'assets/'+f.image),canPlay:()=>!host.hidden&&!st.covered&&tab==='book'&&!srvVote,isReduced:()=>st.reduced,onCover:()=>{conceal();restoreCover();}});
   const warmed=new Set();
   const portraits={'한소설':'han','윤꽃집':'yoon','백비서':'baek','유감독':'yoo'};
   const block=(title,body,kind='')=>`<div class="fact-block ${kind}"><span>${title}</span><p>${body}</p></div>`;
@@ -56,7 +57,7 @@
     const f=frames[st.page],hidden=f.final&&!st.visible;
     return `<section class="scene-screen ${hidden?'secret-hidden':''}" aria-label="${st.page+1}번째 기억"><div class="scene-art ${f.art||''}" aria-hidden="true"><img src="assets/${f.image}" alt=""><div class="scene-shade"></div></div><nav class="scene-progress" aria-label="기억 장면"><div class="scene-count"><span>${d.name}의 기억</span><span><b>${String(st.page+1).padStart(2,'0')}</b> / 06</span></div><ol>${frames.map((f,i)=>`<li><button type="button" data-memory="${i}" ${i>st.visited?'disabled':''} ${i===st.page?'aria-current="step"':''} aria-label="${i+1}번째 장면: ${f.label}"><i></i><span>${f.label}</span></button></li>`).join('')}</ol></nav><div class="scene-content"><div class="scene-copy">${f.final?finalGate():`<div class="scene-kicker"><span>${f.place}</span></div><h1>${f.title}</h1><div class="memory-lines">${f.lines.map(t=>`<p>${t}</p>`).join('')}</div><details class="scene-detail"><summary>${disclosure(f.detailTitle,'이 장면이 궁금하다면 눌러보세요')}</summary><p>${f.detail}</p></details>`}</div><span class="illustration-note">기억을 돕는 연출 이미지 · 실제 단서가 아닙니다</span></div></section>`;
   }
-  function memoryIntro(){return `<section class="intro-screen"><div class="intro-art"><img src="assets/portrait-${profile.image}.png" alt="${d.name}의 정면 초상"><div class="portrait-vignette"></div><div class="memory-stone" aria-hidden="true"><i></i><b></b></div><span class="art-caption">${d.name} / MEMORY</span></div><div class="intro-copy"><span class="eyebrow">다른 사람의 삶으로 들어가는 순간</span><h1>이 기억은,<br>이제 당신의 것입니다.</h1><p>${d.name}이 되어, 그날을 떠올려보세요.</p><div class="intro-meta"><span>6개의 장면</span><i></i><span>소리 없이 · 직접 넘기기</span></div><p class="privacy-hint">${lock}<span>당신만 보는 기억입니다.<br>주변에 화면이 보이지 않는지 확인해주세요.</span></p><button type="button" class="rb-text-button rb-notebook-shortcut" data-act="notebook">기억 수첩 바로 보기 ↗</button></div></section>`;}
+  function memoryIntro(){return `<section class="intro-screen"><div class="intro-art"><img src="assets/portrait-${profile.image}.png" alt="${d.name}의 정면 초상"><div class="portrait-vignette"></div>${window.MemoryPortal.stone()}<span class="art-caption">${d.name} / MEMORY</span></div><div class="intro-copy"><span class="eyebrow">다른 사람의 삶으로 들어가는 순간</span><h1>이 기억은,<br>이제 당신의 것입니다.</h1><p>${d.name}이 되어, 그날을 떠올려보세요.</p><div class="intro-meta"><span>6개의 장면</span><i></i><span>소리 없이 · 직접 넘기기</span></div><p class="privacy-hint">${lock}<span>당신만 보는 기억입니다.<br>주변에 화면이 보이지 않는지 확인해주세요.</span></p><button type="button" class="rb-text-button rb-notebook-shortcut" data-act="notebook">기억 수첩 바로 보기 ↗</button></div></section>`;}
   const topics=[...(profile.meeting?[['meeting','회의에서 무슨 말을 하지?','직접 아는 사실과 대화 참고']]:[]),['relations','누가 누구였지?','인물 관계'],['timeline','그때 나는 어디 있었지?','시간별 행적'],['answers','이 질문에 어떻게 답하지?','질문별 참고'],['background','왜 그랬고, 무엇이 남았지?','배경과 남은 기록'],['secret','내 비밀 다시 확인하기','범인 여부와 역할 원칙']];
   const topicLinks=()=>`<div class="topic-links">${topics.map(([key,title,label])=>`<button type="button" data-topic="${key}"><div><strong>${title}</strong><span>${label}</span></div><span aria-hidden="true">→</span></button>`).join('')}</div>`;
   const key=()=>st.route==='brief'?`brief:${st.page}`:st.route==='reference'?`reference:${st.topic}:${st.topic==='timeline'?st.time:''}`:st.route==='notebook'||st.route==='home'&&st.done?'notebook':'home';
@@ -95,8 +96,8 @@
     return `<section class="notebook"><aside id="rb-stage-task" class="rb-stage-task" aria-label="현재 게임 단계" hidden></aside><div class="notebook-heading"><img src="assets/portrait-${profile.image}.png" alt=""><span class="eyebrow">${st.done?'기억의 끝, 당신의 시작':'필요한 기억부터 찾아보세요'}</span><h1>${st.done?'이제, '+d.name+'입니다.':d.name+'의 기억 수첩'}</h1><p>대화하다 기억이 흐려지면<br>필요한 내용만 다시 찾아보세요.</p></div>${topicLinks()}<div class="notebook-intro"><span class="eyebrow">첫 인사, 이렇게 시작해도 좋아요</span><p>“${d.selfIntro.split('<br>')[0]}”</p><button type="button" data-intro class="rb-text-button">자기소개 전체 보기 ↗</button></div><button type="button" class="restart-reading" data-act="restart">${st.started?'기억 처음부터 다시 보기':'여섯 장면으로 기억 받기'} ↗</button></section>`;
   }
   function action(name){
-    if(name==='start'){st.started=true;navigate('brief');}
-    else if(name==='restart'){st.page=0;st.started=true;st.scrolls={};st.expanded={};navigate('brief');}
+    if(name==='start'){if(st.started)navigate('brief');else portal.play(()=>{st.started=true;navigate('brief');});}
+    else if(name==='restart')portal.play(()=>{st.page=0;st.started=true;st.scrolls={};st.expanded={};navigate('brief');});
     else if(name==='next'){if(frames[st.page].final&&!st.visible)return;if(st.page===frames.length-1){st.done=true;navigate('home');}else {st.visited=Math.max(st.visited,st.page+1);navigate('brief',{page:st.page+1});}}
     else if(name==='prev')navigate('brief',{page:st.page-1});
     else if(name==='home')navigate('home');
@@ -126,7 +127,7 @@
     // Warm only this player's next image; do not download every role's artwork.
     const next=frames[brief?Math.min(st.page+1,frames.length-1):1]?.image;
     if(next&&!warmed.has(next)){warmed.add(next);const img=new Image();img.src='assets/'+next;}
-    sync();
+    sync();portal.present();
   }
   function sync(){
     $('#rb-phase').textContent=ONLINE?`${ROOM} · ${srvPhase||'대기'}`:'오프라인 체험';
@@ -146,20 +147,20 @@
     if(homePrimary&&(st.done||st.route==='notebook')){homePrimary.dataset.act=task?.label?'stage':'cover';homePrimary.querySelector('span').textContent=task?.label||'화면 덮고 다음 안내 기다리기';}
 
   }
-  function conceal(){remember();st.visible=false;st.covered=true;if($('#rb-private').open)$('#rb-private').close();paint(st.scrolls[key()]||0);}
+  function conceal(){portal.cancel();remember();st.visible=false;st.covered=true;if($('#rb-private').open)$('#rb-private').close();paint(st.scrolls[key()]||0);}
   function restoreCover(){if(!host.hidden&&st.covered&&!$('#rb-private').open)$('#rb-private').showModal();}
   function resumeCover(){st.covered=false;$('#rb-private').close();paint(st.scrolls[key()]||0);}
   $('#rb-cover').onclick=()=>action('cover');$('#rb-resume').onclick=resumeCover;
   $('#rb-private').addEventListener('cancel',e=>{e.preventDefault();resumeCover();});
   $('#rb-motion').onclick=()=>{remember();st.reduced=!st.reduced;paint(st.scrolls[key()]||0);};
-  reduced.addEventListener('change',e=>{remember();st.reduced=e.matches;paint(st.scrolls[key()]||0);});
+  reduced.addEventListener('change',e=>{remember();st.reduced=e.matches;if(e.matches)portal.skip();paint(st.scrolls[key()]||0);});
   root.querySelectorAll('[data-dest]').forEach(b=>b.onclick=()=>{
     if(b.dataset.dest==='book'){navigate('notebook');return;}
     leaveBook(b.dataset.dest);
   });
   const originalRender=render, originalNet=dockNet;
   const gameApp=document.getElementById('app');
-  rBook=function(){M().innerHTML='';host.hidden=document.getElementById('gate').style.display!=='none';gameApp.inert=!host.hidden;sync();restoreCover();};
+  rBook=function(){M().innerHTML='';host.hidden=document.getElementById('gate').style.display!=='none';gameApp.inert=!host.hidden;sync();portal.present();restoreCover();};
   render=function(){if(tab!=='book'||srvVote){if(!host.hidden){remember();conceal();}host.hidden=true;gameApp.inert=false;}originalRender();};
   dockNet=function(){originalNet();sync();};
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&!host.hidden){conceal();restoreCover();}});

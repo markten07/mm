@@ -26,6 +26,7 @@ jobs:
           node tests/check-experience.cjs
           node tests/check-rolebook.cjs
           node tests/check-player-shell.cjs
+          node tests/check-memory-portal.cjs
           node tests/check-deployment.cjs
       - name: Package public site
         run: python3 scripts/build-site.py

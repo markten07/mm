@@ -45,9 +45,10 @@
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const state = {view:'intro', scene:0, visited:0, reveal:false, reduced:reduced.matches, covered:false, finished:false, reference:''};
   const lock = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg>';
+  const portal=window.MemoryPortal.create({root:document.body,stage:main,content:document.querySelector('.memory-app'),portrait:'assets/portrait-han.png',images:scenes.slice(1,3).map(s=>s.image),canPlay:()=>!state.covered,isReduced:()=>state.reduced,onCover:()=>putCover()});
   const arrow = '<span aria-hidden="true">↗</span>';
   function intro() {
-    return `<section class="intro-screen"><div class="intro-art"><img src="assets/portrait-han.png" alt="한소설의 정면 초상" fetchpriority="high"><div class="portrait-vignette"></div><div class="memory-stone" aria-hidden="true"><i></i><b></b></div><span class="art-caption">HAN SOSEOL / MEMORY 01</span></div><div class="intro-copy"><span class="eyebrow">다른 사람의 삶으로 들어가는 순간</span><h1>이 기억은,<br>이제 당신의 것입니다.</h1><p>한소설이 되어, 그날을 떠올려보세요.</p><div class="intro-meta"><span>6개의 장면</span><i></i><span>소리 없이 · 직접 넘기기</span></div><p class="privacy-hint">${lock}<span>당신만 보는 기억입니다.<br>주변에 화면이 보이지 않는지 확인해주세요.</span></p></div></section>`;
+    return `<section class="intro-screen"><div class="intro-art"><img src="assets/portrait-han.png" alt="한소설의 정면 초상" fetchpriority="high"><div class="portrait-vignette"></div>${window.MemoryPortal.stone()}<span class="art-caption">HAN SOSEOL / MEMORY 01</span></div><div class="intro-copy"><span class="eyebrow">다른 사람의 삶으로 들어가는 순간</span><h1>이 기억은,<br>이제 당신의 것입니다.</h1><p>한소설이 되어, 그날을 떠올려보세요.</p><div class="intro-meta"><span>6개의 장면</span><i></i><span>소리 없이 · 직접 넘기기</span></div><p class="privacy-hint">${lock}<span>당신만 보는 기억입니다.<br>주변에 화면이 보이지 않는지 확인해주세요.</span></p></div></section>`;
   }
   function progress() {
     return `<nav class="scene-progress" aria-label="기억 장면"><div class="scene-count"><span>한소설의 기억</span><span>${state.finished?'<button type="button" class="notebook-back" data-action="notebook">기억 수첩 ↗</button>':''}<b>${String(state.scene+1).padStart(2,'0')}</b> / 06</span></div><ol>${scenes.map((s,i)=>`<li><button type="button" data-jump="${i}" ${i>state.visited?'disabled':''} ${i===state.scene?'aria-current="step"':''} aria-label="${i+1}번째 장면: ${s.label}"><i></i><span>${s.label}</span></button></li>`).join('')}</ol></nav>`;
@@ -103,6 +104,7 @@
     else footer.innerHTML=`<div class="footer-inner"><button type="button" class="primary" data-action="restart">기억 처음부터 다시 보기 ${arrow}</button></div>`;
     main.scrollTop=0;
     if(focus)main.focus({preventScroll:true});
+    portal.present();
   }
   function goScene(i) {
     if(i<0){state.view='intro';state.reveal=false;render();return;}
@@ -116,12 +118,12 @@
   }
   function putCover() {
     if(state.covered)return;
-    state.covered=true;document.body.classList.add('is-covered');conceal();cover.showModal();
+    portal.cancel();state.covered=true;document.body.classList.add('is-covered');conceal();cover.showModal();
   }
   function resume() { cover.close();state.covered=false;document.body.classList.remove('is-covered');render(); }
   document.addEventListener('click',e=>{
     const button=e.target.closest('button');if(!button||button.disabled)return;
-    if(button.dataset.action==='start'||button.dataset.action==='restart')goScene(0);
+    if(button.dataset.action==='start'||button.dataset.action==='restart')portal.play(()=>goScene(0));
     else if(button.dataset.action==='previous')goScene(state.scene-1);
     else if(button.dataset.action==='next'){
       if(scenes[state.scene].private&&!state.reveal)return;
@@ -149,9 +151,9 @@
   });
   document.addEventListener('visibilitychange',()=>{if(document.hidden)putCover();});
   window.addEventListener('blur',putCover);
-  window.addEventListener('pagehide',()=>{document.body.classList.add('is-covered');conceal();});
+  window.addEventListener('pagehide',()=>{portal.cancel();document.body.classList.add('is-covered');conceal();});
   window.addEventListener('pageshow',e=>{if(e.persisted&&!state.covered)putCover();});
-  reduced.addEventListener('change',e=>{state.reduced=e.matches;render(false);});
+  reduced.addEventListener('change',e=>{state.reduced=e.matches;if(e.matches)portal.skip();render(false);});
   // Warm the next image; images are illustrative, never additional evidence.
   for(const path of new Set(scenes.map(s=>s.image))){const img=new Image();img.src=path;}
   render(false);

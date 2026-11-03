@@ -1,0 +1,78 @@
+/* A distant shard finds the character; the viewer enters its depth on demand. */
+.intro-art{perspective:900px}
+.memory-voyager{position:absolute;inset:0;pointer-events:none;perspective:900px;isolation:isolate;--stone-x:57%;--stone-y:37%}
+.voyager-flight{position:absolute;left:var(--stone-x);top:var(--stone-y);width:66px;height:90px;margin:-45px 0 0 -33px;opacity:0;transform-style:preserve-3d;will-change:transform,opacity}
+.voyager-crystal{display:block;position:absolute;inset:0;filter:drop-shadow(0 0 8px #e4ffcd) drop-shadow(0 0 24px #8bb6a1aa);transform:rotate(9deg)}
+.voyager-crystal svg{display:block;width:100%;height:100%}
+.voyager-aura{position:absolute;inset:-60%;border-radius:50%;background:radial-gradient(ellipse,#f4ffce5e, #a6d9c921 35%,transparent 68%);filter:blur(8px)}
+.voyager-tail{position:absolute;width:260px;height:12px;left:55%;top:40%;transform:rotate(-35deg);transform-origin:0 50%;border-radius:50%;background:linear-gradient(90deg,#efffe7b8,#93c8bc38 30%,transparent);filter:blur(5px);opacity:0}
+.voyager-wake{position:absolute;width:180px;height:2px;left:60%;top:46%;transform:rotate(-35deg);transform-origin:0 50%;background:linear-gradient(90deg,#f6ffed,transparent);opacity:0}
+.voyager-ring{position:absolute;inset:-24%;border:1px solid #d9efbf66;border-radius:50%;transform:rotateX(65deg) rotate(-18deg);box-shadow:0 0 24px #b8d7b524;opacity:0}
+.voyager-dust{position:absolute;left:var(--stone-x);top:var(--stone-y);width:1px;height:1px}
+.voyager-dust i{position:absolute;left:0;top:0;width:3px;height:3px;border-radius:50%;background:#eaffdf;box-shadow:0 0 9px #c7f4bf;opacity:0;transform:rotate(calc(var(--i)*45deg)) translateY(25px)}
+.portal-arriving .voyager-flight{animation:memory-flight-in 3.4s cubic-bezier(.22,.61,.35,1) both}
+.portal-arriving .voyager-tail,.portal-arriving .voyager-wake{animation:memory-tail 3.4s ease-out both}
+.portal-arriving .voyager-ring{animation:memory-contact 1.5s 2.3s ease-out both}
+.portal-arriving .voyager-dust i{animation:memory-mote 2.7s calc(2.6s + var(--i)*.12s) ease-out both}
+.portal-arriving .voyager-crystal{animation:memory-hover 5s 3.4s ease-in-out infinite}
+.portal-ready .voyager-flight{opacity:1;transform:none;animation:memory-hover 5s ease-in-out infinite}
+.portal-ready .voyager-ring{opacity:.35}
+.portal-arriving .intro-art>img{animation:memory-face-awaken 3.5s ease-out both}
+.portal-ready .intro-art>img{animation:none}
+@keyframes memory-flight-in{
+  0%{opacity:0;transform:translate3d(34vw,-25vh,-700px) scale(.06) rotate(-55deg)}
+  12%{opacity:.5;transform:translate3d(30vw,-22vh,-520px) scale(.18) rotate(-38deg)}
+  44%{opacity:.95;transform:translate3d(13vw,-12vh,-220px) scale(.5) rotate(-18deg)}
+  73%{opacity:1;transform:translate3d(-10px,10px,35px) scale(1.12) rotate(7deg)}
+  88%{transform:translate3d(3px,-3px,0) scale(.97) rotate(-2deg)}
+  100%{opacity:1;transform:translate3d(0,0,0) scale(1) rotate(0)}
+}
+@keyframes memory-tail{0%,8%{opacity:0}25%,60%{opacity:.9}88%,100%{opacity:0;transform:rotate(-35deg) scaleX(.2)}}
+@keyframes memory-contact{0%{opacity:0;transform:rotateX(65deg) scale(.3)}30%{opacity:.7}100%{opacity:0;transform:rotateX(65deg) scale(2.6)}}
+@keyframes memory-mote{0%{opacity:0;transform:rotate(calc(var(--i)*45deg)) translateY(18px)}18%{opacity:.8}100%{opacity:0;transform:rotate(calc(var(--i)*45deg + 30deg)) translateY(115px)}}
+@keyframes memory-hover{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-8px) rotate(5deg)}}
+@keyframes memory-face-awaken{0%{filter:brightness(.35) saturate(.55)}65%{filter:brightness(.52) saturate(.75)}100%{filter:brightness(.85) saturate(1)}}
+
+.memory-portal{position:fixed;inset:0;z-index:45;overflow:hidden;background:#090f0d;color:#f3f7ed;font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif;isolation:isolate}
+.memory-portal[hidden]{display:none!important}
+.portal-visual{position:absolute;inset:0;overflow:hidden;perspective:600px;pointer-events:none}
+.portal-face{width:100%;height:100%;object-fit:cover;object-position:50% 25%;opacity:.3;filter:saturate(.35);transform-origin:50% 36%}
+.portal-playing .portal-face{animation:memory-face-dive 1.9s cubic-bezier(.25,.1,.3,1) both}
+.portal-heart{position:absolute;left:50%;top:43%;width:76px;height:104px;margin:-52px 0 0 -38px;filter:drop-shadow(0 0 20px #d3f7c7);transform-style:preserve-3d}
+.portal-heart>span,.portal-heart svg{display:block;width:100%;height:100%}
+.portal-playing .portal-heart{animation:memory-core-dive 1.9s cubic-bezier(.28,.05,.48,1) both}
+.portal-depth{position:absolute;left:50%;top:43%;width:min(64vw,440px);height:min(64vw,440px);transform:translate(-50%,-50%)}
+.portal-depth i{position:absolute;inset:0;border-radius:50%;border:1px solid #b3d1af77;box-shadow:inset 0 0 50px #b0d7bd18,0 0 32px #9accad25;opacity:0}
+.portal-playing .portal-depth i{animation:memory-depth-pass 1.4s .35s ease-in both}
+.portal-playing .portal-depth i:nth-child(2){animation-delay:.57s;border-style:dashed;transform:rotate(35deg)}
+.portal-playing .portal-depth i:nth-child(3){animation-delay:.78s}
+.portal-rays{position:absolute;left:50%;top:43%}
+.portal-rays i{position:absolute;left:0;top:0;width:1px;height:35px;background:linear-gradient(0deg,transparent,#c5e1b999,transparent);transform-origin:50% 100%;opacity:0}
+.portal-playing .portal-rays i{animation:memory-depth-ray 1.2s calc(.45s + var(--delay)) ease-in both}
+.portal-fragments{position:absolute;inset:0}
+.portal-fragments img{position:absolute;width:clamp(90px,24vw,260px);height:clamp(130px,34vw,350px);object-fit:cover;opacity:0;filter:saturate(.25);border-radius:3px;left:calc(50% + (var(--fragment) - .5)*170px);top:32%;transform:translate(-50%,-50%) scale(.3)}
+.portal-playing .portal-fragments img{animation:memory-fragment-pass 1.2s calc(.35s + var(--fragment)*.22s) ease-in both}
+.portal-veil{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 43%,transparent 6%,#070c0a22 30%,#070c0ace 85%)}
+.portal-playing .portal-veil{animation:memory-cross-threshold 1.9s ease-in-out both}
+.portal-tools{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));left:20px;right:20px;display:flex;justify-content:space-between;gap:14px;z-index:2}
+.portal-tools button{min-height:44px;border:1px solid #c8d9c94d;border-radius:24px;background:#101a15aa;color:#e5eddf;font-family:inherit;font-size:12px;font-weight:500;line-height:1.5;padding:10px 15px;cursor:pointer;backdrop-filter:blur(8px)}
+.portal-tools button:focus-visible{outline:2px solid #d5debc;outline-offset:3px}
+.portal-caption{position:absolute;left:24px;right:24px;bottom:calc(18% + env(safe-area-inset-bottom,0px));text-align:center;pointer-events:none;opacity:0}
+.portal-caption small{font-size:11px;letter-spacing:.1em;color:#b3c6b5}
+.portal-caption p{font-family:'Noto Serif KR',serif;font-size:clamp(20px,3vw,30px);line-height:1.6;margin:12px 0;color:#edf4e3}
+.portal-playing .portal-caption{animation:memory-entry-caption 1.9s ease-out both}
+.portal-diving .intro-art{transition:filter .3s;filter:brightness(.65)}
+.portal-emerged .scene-copy,.portal-emerged .scene-progress{animation:memory-emerge .6s ease-out both}
+@keyframes memory-face-dive{0%{opacity:.3;transform:scale(1)}40%{opacity:.35}100%{opacity:0;transform:scale(1.6);filter:blur(10px) saturate(.2)}}
+@keyframes memory-core-dive{0%{opacity:1;transform:translate(var(--launch-x),var(--launch-y)) scale(.75) rotate(9deg)}35%{opacity:1;transform:translate(0,0) scale(.8) rotate(-8deg)}65%{opacity:.9;transform:scale(2) rotate(20deg)}100%{opacity:0;transform:scale(18) rotate(45deg);filter:blur(8px)}}
+@keyframes memory-depth-pass{0%{opacity:0;transform:scale(.08) rotate(-15deg)}30%{opacity:.7}100%{opacity:0;transform:scale(4.5) rotate(22deg)}}
+@keyframes memory-depth-ray{0%{opacity:0;transform:rotate(var(--angle)) translateY(-24px) scaleY(.1)}35%{opacity:.7}100%{opacity:0;transform:rotate(var(--angle)) translateY(-85vh) scaleY(9)}}
+@keyframes memory-fragment-pass{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-9deg)}30%{opacity:.24}100%{opacity:0;transform:translate(calc(-50% + (var(--fragment) - .5)*360px),-50%) scale(2.8) rotate(8deg)}}
+@keyframes memory-cross-threshold{0%{opacity:1}45%{opacity:.6;background-color:transparent}75%{opacity:.4;background-color:#9eb49355}100%{opacity:1;background-color:#101413}}
+@keyframes memory-entry-caption{0%,10%{opacity:0;transform:translateY(8px)}30%,68%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-5px)}}
+@keyframes memory-emerge{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(max-width:700px){.memory-voyager{--stone-x:63%;--stone-y:29%}.voyager-flight{width:45px;height:62px;margin:-31px 0 0 -22px}.voyager-tail{width:180px;height:8px}.voyager-wake{width:135px}.portal-tools{left:16px;right:16px}.portal-caption{bottom:20%}.portal-heart{width:62px;height:85px;margin:-42px 0 0 -31px}}
+@media(prefers-reduced-motion:reduce){.memory-voyager *,.memory-portal *,.portal-emerged *{animation:none!important;transition:none!important}.voyager-flight{opacity:1;transform:none}.voyager-tail,.voyager-wake,.voyager-dust{display:none}}
+.reduced-motion .memory-voyager *,.reduced-motion .memory-portal *{animation:none!important;transition:none!important}
+.reduced-motion .voyager-flight{opacity:1;transform:none}
+.reduced-motion .voyager-tail,.reduced-motion .voyager-wake,.reduced-motion .voyager-dust{display:none}
