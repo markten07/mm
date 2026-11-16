@@ -1,0 +1,13 @@
+/* One uploaded film fills the existing host stage. Captions are already in the film. */
+.vu-gm #s-pro.host-film #book,.vu-gm #s-rev.host-film #rvbody{position:relative;display:flex;flex-direction:column;width:min(1600px,100%);height:100%;min-height:0;margin:0 auto;padding:0;background:#080a0d;border:0;border-radius:12px;overflow:hidden}
+.host-film-video{display:block;width:100%;height:100%;min-height:0;flex:1;object-fit:contain;background:#080a0d}
+body:has(.host-film.on) #bgmBtn,body:has(.host-film.on) .vu-listenbar{display:none}
+.vu-gm #s-rev.host-film.on{grid-template-rows:minmax(0,1fr) auto}
+.host-film #rvcount,.host-film .pro-progress,.host-film .rv-progress,.host-film #proPlay,.host-film #rvPlay{display:none!important}
+.host-film .pro-player,.host-film .rv-player{width:min(1600px,100%);padding:0 4px;background:transparent;border:0;box-shadow:none}
+.host-film .pro-player-status,.host-film .rv-player-status{margin:3px 0 8px;font:400 12px var(--sans);letter-spacing:0;color:var(--dim)}
+.host-film .btns{display:flex!important;justify-content:center;gap:10px}
+.host-film .btns button{min-width:120px}
+.host-film .host-film-error{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;text-align:center;background:#11151bee;color:var(--ink)}
+.host-film .host-film-error[hidden]{display:none}
+@media(max-width:720px){.host-film .btns button{min-width:0;flex:1}.host-film .pro-player-status,.host-film .rv-player-status{font-size:11px}.host-film .btns{margin-top:0}}

@@ -24,6 +24,7 @@ jobs:
         run: |
           node tests/check-game.cjs
           node tests/check-host.cjs
+          node tests/check-host-cinema.cjs
           node tests/check-experience.cjs
           node tests/check-rolebook.cjs
           node tests/check-player-shell.cjs

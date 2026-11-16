@@ -899,13 +899,18 @@ async function openRoom(){
           left=paused?Math.max(0,Number(saved.left)||0):Math.max(0,Math.ceil((Number(saved.deadline)-Date.now())/1000)||0);
           deadline=Date.now()+left*1000;
           timerExpired=left<=0; if(timerExpired)paused=true; $('#pause').textContent=paused?'타이머 계속':'타이머 멈춤'; paint(); saveGM('round');
+        }else if(saved.stage==='prologue' && typeof window!=='undefined' && window.HOST_CINEMA){
+          window.HOST_CINEMA.open('prologue',saved.media?.prologue,false);
         }else if(saved.stage==='prologue'){
           const memory=saved.prologue||{};
           pro=Math.max(0,Math.min(PROLOGUE.length-1,Number(memory.scene)||0));
           proElapsed=Math.max(0,Math.min(proDuration(),Number(memory.elapsed)||0));
           proFinished=false;proMode='paused';saveGM('prologue');show('#s-pro');paintPro();
         }else if(saved.stage==='gate'){ votes=(await roomRef('votes').once('value')).val()||{}; if(!showGate()){startRound(10);paused=true;saveGM();paint();} }
-        else if(saved.stage==='reveal'){ startReveal(); }
+        else if(saved.stage==='reveal'){
+          if(window.HOST_CINEMA)window.HOST_CINEMA.open('reveal',saved.media?.reveal,false);
+          else startReveal();
+        }
         return;
       }
     }
@@ -922,7 +927,8 @@ function saveGM(stage=gmStage){
   gmStage=stage;
   if(!ONLINE) return;
   const prologue=stage==='prologue'?{scene:pro,elapsed:proElapsed}:undefined;
-  try{ sessionStorage.setItem('mmV2GM',JSON.stringify({room:ROOM,stage,ri,left,paused,deadline,unseen:unseenShown,prologue})); }catch(e){}
+  const media=typeof window!=='undefined'?window.HOST_CINEMA?.snapshot():undefined;
+  try{ sessionStorage.setItem('mmV2GM',JSON.stringify({room:ROOM,stage,ri,left,paused,deadline,unseen:unseenShown,prologue,media})); }catch(e){}
 }
 function paintRoomCard(){
   if(typeof paintQR==='function')paintQR();
@@ -1211,6 +1217,7 @@ function runProScene(){
 }
 
 function show(id){
+  if(window.HOST_CINEMA)window.HOST_CINEMA.leave(id);
   document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
   $(id).classList.add('on');
 }
@@ -1277,6 +1284,7 @@ function showGate(){
   return true;
 }
 function startReveal(){
+  if(window.HOST_CINEMA){window.HOST_CINEMA.open('reveal',null,true);return;}
   saveGM('reveal');
   clearInterval(tick); clearRevealClock(); revAudioStop();
   rev=0; rvMode='stopped'; rvElapsed=0; rvFinished=false;
@@ -1443,12 +1451,13 @@ let tt; function toast(m){ const el=$('#toast'); el.textContent=m; el.classList.
   clearTimeout(tt); tt=setTimeout(()=>el.classList.remove('on'),2000); }
 
 /* 이벤트 */
-$('#go').addEventListener('click',()=>initProAudio());
 $('#go').onclick = ()=>{
+  if(window.HOST_CINEMA){window.HOST_CINEMA.open('prologue',null,true);return;}
   bgmStart();
   pro=0;proElapsed=0;proFinished=false;proMode='playing';saveGM('prologue');show('#s-pro');paintPro();runProScene();
 };
 window.addEventListener('pagehide',()=>{
+  if(window.HOST_CINEMA?.active()){saveGM();return;}
   if(gmStage!=='prologue')return;
   if(proMode==='playing')proElapsed=Math.min(proDuration(),performance.now()-proStarted);
   saveGM('prologue');
@@ -1527,7 +1536,6 @@ $('#tSched').onclick = ()=>{
 <script src="assets/visual-upgrade.js?v=2"></script>
 <script>
 /* 나레이션 미리 받아두기 · 캐릭터 QR 표시 */
-try{ initProAudio(); }catch(e){ console.warn(e); }
 try{ paintQR(); }catch(e){ console.warn(e); }
 try{
   document.querySelectorAll('#drawset [data-d]').forEach(b=>b.onclick=()=>{
@@ -1540,5 +1548,7 @@ try{ initBgm(); paintBgmBtn();
 </script>
 <script src="assets/host-state.js?v=2"></script>
 <script src="assets/host-guide.js?v=13"></script>
+<link rel="stylesheet" href="assets/host-cinema.css?v=1">
+<script src="assets/host-cinema.js?v=1"></script>
 </body>
 </html>
